@@ -1,0 +1,19 @@
+name: easy_cache
+description: Simple, efficient cache service with TTL support, bulk operations, and automatic expiry management using SharedPreferences.
+version: 0.1.0
+publish_to: 'none'
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.3.5
+
+dev_dependencies:
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: false

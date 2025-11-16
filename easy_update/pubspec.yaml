@@ -1,0 +1,20 @@
+name: easy_update
+description: "Remote Config tabanlı Flutter uygulama sürüm kontrol paketi. Zorunlu ve isteğe bağlı güncellemeler için hazır dialog ve service sağlar."
+version: 1.0.0
+publish_to: 'none'
+
+environment:
+  sdk: ^3.8.0
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  package_info_plus: ^9.0.0
+  url_launcher: ^6.3.1
+  shared_preferences: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
