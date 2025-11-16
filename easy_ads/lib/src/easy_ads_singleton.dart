@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/widgets.dart';
 
 import 'config.dart';
@@ -14,7 +12,6 @@ class EasyAds with WidgetsBindingObserver {
 
   EasyAdsService? _service;
   EasyAdsConfig? _config;
-  Timer? _warmUpTimer;
 
   static bool get isConfigured => instance._service != null;
 
@@ -25,29 +22,6 @@ class EasyAds with WidgetsBindingObserver {
 
     // App lifecycle observer'ı başlat
     WidgetsBinding.instance.addObserver(instance);
-  }
-
-  static void startPeriodicWarmUp() {
-    final config = instance._config;
-    if (config == null || config.warmUpInterval == null) return;
-
-    instance._warmUpTimer?.cancel();
-    instance._warmUpTimer = Timer.periodic(
-      config.warmUpInterval!,
-      (_) async {
-        try {
-          print('EasyAds: Performing periodic warm-up.');
-          await warmUp();
-        } catch (_) {
-          // Silent fail
-        }
-      },
-    );
-  }
-
-  static void stopPeriodicWarmUp() {
-    instance._warmUpTimer?.cancel();
-    instance._warmUpTimer = null;
   }
 
   static EasyAdsConfig? get config => instance._config;
@@ -90,7 +64,6 @@ class EasyAds with WidgetsBindingObserver {
 
   /// Lifecycle observer'ı temizle
   static void dispose() {
-    stopPeriodicWarmUp();
     WidgetsBinding.instance.removeObserver(instance);
   }
 }

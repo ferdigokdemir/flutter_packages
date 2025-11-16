@@ -8,7 +8,8 @@ class EasyAdsConfig {
   final int adLoadTimeoutSeconds;
   final int showTimeoutSeconds;
   final int maxRetryAttempts;
-  final Duration? warmUpInterval;
+  final int interstitialPoolSize;
+  final int rewardedPoolSize;
 
   const EasyAdsConfig({
     required this.adsEnabled,
@@ -20,6 +21,7 @@ class EasyAdsConfig {
     this.adLoadTimeoutSeconds = 10,
     this.showTimeoutSeconds = 15,
     this.maxRetryAttempts = 3,
-    this.warmUpInterval,
+    this.interstitialPoolSize = 3,
+    this.rewardedPoolSize = 3,
   });
 }

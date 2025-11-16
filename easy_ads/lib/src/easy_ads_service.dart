@@ -2,11 +2,23 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:retry/retry.dart';
+import 'ad_pool.dart';
 import 'config.dart';
 import 'models.dart';
 
 class EasyAdsService {
-  EasyAdsService(this.config);
+  EasyAdsService(this.config) {
+    _interstitialPool = AdPool<InterstitialAd>(
+      type: AdType.interstitial,
+      maxSize: config.interstitialPoolSize,
+      loadAd: _loadInterstitialAd,
+    );
+    _rewardedPool = AdPool<RewardedAd>(
+      type: AdType.rewarded,
+      maxSize: config.rewardedPoolSize,
+      loadAd: _loadRewardedAd,
+    );
+  }
 
   final EasyAdsConfig config;
 
@@ -15,8 +27,8 @@ class EasyAdsService {
   static bool _isLoadingRewarded = false;
   static bool _isLoadingAppOpen = false;
 
-  InterstitialAd? _cachedInterstitial;
-  RewardedAd? _cachedRewarded;
+  late final AdPool<InterstitialAd> _interstitialPool;
+  late final AdPool<RewardedAd> _rewardedPool;
 
   Future<void> initialize() async {
     if (_isInitialized) return;
@@ -27,7 +39,7 @@ class EasyAdsService {
   Future<void> warmUp() async {
     if (!config.adsEnabled) return;
     if (!_isInitialized) await initialize();
-    await Future.wait([_prefetchInterstitial(), _prefetchRewarded()]);
+    await Future.wait([_interstitialPool.refill(), _rewardedPool.refill()]);
   }
 
   void showAd(AdType type, {required AdResultCallback onResult}) {
@@ -70,8 +82,7 @@ class EasyAdsService {
 
     _isLoadingInterstitial = true;
     try {
-      final ad = _cachedInterstitial ?? await _loadInterstitialAd();
-      _cachedInterstitial = null;
+      final ad = _interstitialPool.getAd() ?? await _loadInterstitialAd();
       if (ad == null) {
         _isLoadingInterstitial = false;
         onResult(const AdResponse(
@@ -94,7 +105,6 @@ class EasyAdsService {
         onAdDismissedFullScreenContent: (ad) async {
           await ad.dispose();
           _isLoadingInterstitial = false;
-          _prefetchInterstitial();
           onResult(AdResponse(
             type: AdType.interstitial,
             status: AdStatus.success,
@@ -156,8 +166,7 @@ class EasyAdsService {
 
     _isLoadingRewarded = true;
     try {
-      final ad = _cachedRewarded ?? await _loadRewardedAd();
-      _cachedRewarded = null;
+      final ad = _rewardedPool.getAd() ?? await _loadRewardedAd();
       if (ad == null) {
         _isLoadingRewarded = false;
         onResult(const AdResponse(
@@ -181,7 +190,6 @@ class EasyAdsService {
         onAdDismissedFullScreenContent: (ad) async {
           await ad.dispose();
           _isLoadingRewarded = false;
-          _prefetchRewarded();
           // Sadece ödül alındıysa success döndür
           onResult(AdResponse(
             type: AdType.rewarded,
@@ -389,16 +397,6 @@ class EasyAdsService {
     } catch (e) {
       return null;
     }
-  }
-
-  Future<void> _prefetchInterstitial() async {
-    _cachedInterstitial?.dispose();
-    _cachedInterstitial = await _loadInterstitialAd();
-  }
-
-  Future<void> _prefetchRewarded() async {
-    _cachedRewarded?.dispose();
-    _cachedRewarded = await _loadRewardedAd();
   }
 
   Future<void> applyRequestConfiguration() async {
