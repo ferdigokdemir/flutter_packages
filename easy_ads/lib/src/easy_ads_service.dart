@@ -18,11 +18,6 @@ class EasyAdsService {
       maxSize: config.rewardedPoolSize,
       loadAd: _loadRewardedAd,
     );
-    _rewardedInterstitialPool = AdPool<RewardedInterstitialAd>(
-      type: AdType.rewardedInterstitial,
-      maxSize: config.rewardedInterstitialPoolSize,
-      loadAd: _loadRewardedInterstitialAd,
-    );
   }
 
   final EasyAdsConfig config;
@@ -30,12 +25,10 @@ class EasyAdsService {
   static bool _isInitialized = false;
   static bool _isLoadingInterstitial = false;
   static bool _isLoadingRewarded = false;
-  static bool _isLoadingRewardedInterstitial = false;
   static bool _isLoadingAppOpen = false;
 
   late final AdPool<InterstitialAd> _interstitialPool;
   late final AdPool<RewardedAd> _rewardedPool;
-  late final AdPool<RewardedInterstitialAd> _rewardedInterstitialPool;
 
   Future<void> initialize() async {
     if (_isInitialized) return;
@@ -46,11 +39,7 @@ class EasyAdsService {
   Future<void> warmUp() async {
     if (!config.adsEnabled) return;
     if (!_isInitialized) await initialize();
-    await Future.wait([
-      _interstitialPool.refill(),
-      _rewardedPool.refill(),
-      _rewardedInterstitialPool.refill(),
-    ]);
+    await Future.wait([_interstitialPool.refill(), _rewardedPool.refill()]);
   }
 
   void showAd(AdType type, {required AdResultCallback onResult}) {
@@ -60,9 +49,6 @@ class EasyAdsService {
         break;
       case AdType.rewarded:
         _showRewardedInternal(onResult);
-        break;
-      case AdType.rewardedInterstitial:
-        _showRewardedInterstitialInternal(onResult);
         break;
       case AdType.appOpen:
         _showAppOpenInternal(onResult);
@@ -245,98 +231,6 @@ class EasyAdsService {
     }
   }
 
-  void _showRewardedInterstitialInternal(AdResultCallback onResult) async {
-    if (!config.adsEnabled || !_isInitialized) {
-      onResult(const AdResponse(
-        type: AdType.rewardedInterstitial,
-        status: AdStatus.error,
-        shown: false,
-        dismissed: false,
-        error: 'Service disabled',
-        errorCode: AdErrorCode.serviceDisabled,
-      ));
-      return;
-    }
-    if (_isLoadingRewardedInterstitial) {
-      onResult(const AdResponse(
-        type: AdType.rewardedInterstitial,
-        status: AdStatus.error,
-        shown: false,
-        dismissed: false,
-        error: 'Already loading',
-        errorCode: AdErrorCode.alreadyLoading,
-      ));
-      return;
-    }
-
-    _isLoadingRewardedInterstitial = true;
-    try {
-      final ad = _rewardedInterstitialPool.getAd() ??
-          await _loadRewardedInterstitialAd();
-      if (ad == null) {
-        _isLoadingRewardedInterstitial = false;
-        onResult(const AdResponse(
-          type: AdType.rewardedInterstitial,
-          status: AdStatus.error,
-          shown: false,
-          dismissed: false,
-          error: 'Failed to load',
-          errorCode: AdErrorCode.loadFailed,
-        ));
-        return;
-      }
-
-      var wasShown = false;
-      RewardItem? earned;
-
-      ad.fullScreenContentCallback = FullScreenContentCallback(
-        onAdShowedFullScreenContent: (ad) {
-          wasShown = true;
-        },
-        onAdDismissedFullScreenContent: (ad) async {
-          await ad.dispose();
-          _isLoadingRewardedInterstitial = false;
-          // Sadece ödül alındıysa success döndür
-          onResult(AdResponse(
-            type: AdType.rewardedInterstitial,
-            status: earned != null ? AdStatus.success : AdStatus.error,
-            shown: wasShown,
-            dismissed: true,
-            reward: earned,
-            error: earned == null ? 'Reward not earned' : null,
-            errorCode: earned == null ? AdErrorCode.showFailed : null,
-          ));
-        },
-        onAdFailedToShowFullScreenContent: (ad, error) async {
-          await ad.dispose();
-          _isLoadingRewardedInterstitial = false;
-          onResult(AdResponse(
-            type: AdType.rewardedInterstitial,
-            status: AdStatus.error,
-            shown: false,
-            dismissed: false,
-            error: error.toString(),
-            errorCode: AdErrorCode.showFailed,
-          ));
-        },
-      );
-
-      ad.show(onUserEarnedReward: (ad, reward) {
-        earned = reward;
-      });
-    } catch (e) {
-      _isLoadingRewardedInterstitial = false;
-      onResult(AdResponse(
-        type: AdType.rewardedInterstitial,
-        status: AdStatus.error,
-        shown: false,
-        dismissed: false,
-        error: e.toString(),
-        errorCode: AdErrorCode.showFailed,
-      ));
-    }
-  }
-
   void _showAppOpenInternal(AdResultCallback onResult) async {
     if (!config.adsEnabled || !_isInitialized) {
       onResult(const AdResponse(
@@ -459,35 +353,6 @@ class EasyAdsService {
             adUnitId: config.rewardedAdUnitId,
             request: const AdRequest(),
             rewardedAdLoadCallback: RewardedAdLoadCallback(
-              onAdLoaded: (ad) => completer.complete(ad),
-              onAdFailedToLoad: (error) => completer.completeError(error),
-            ),
-          );
-
-          return await completer.future;
-        },
-        retryIf: (e) => true,
-        maxAttempts: config.maxRetryAttempts,
-      ).timeout(
-        Duration(seconds: config.adLoadTimeoutSeconds),
-        onTimeout: () => null,
-      );
-    } catch (e) {
-      return null;
-    }
-  }
-
-  Future<RewardedInterstitialAd?> _loadRewardedInterstitialAd() async {
-    try {
-      return await retry(
-        () async {
-          final completer = Completer<RewardedInterstitialAd?>();
-
-          RewardedInterstitialAd.load(
-            adUnitId: config.rewardedInterstitialAdUnitId,
-            request: const AdRequest(),
-            rewardedInterstitialAdLoadCallback:
-                RewardedInterstitialAdLoadCallback(
               onAdLoaded: (ad) => completer.complete(ad),
               onAdFailedToLoad: (error) => completer.completeError(error),
             ),
