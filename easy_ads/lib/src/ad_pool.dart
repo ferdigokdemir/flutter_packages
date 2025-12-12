@@ -85,6 +85,8 @@ class AdPool<T> {
         ad.dispose();
       } else if (ad is RewardedAd) {
         ad.dispose();
+      } else if (ad is RewardedInterstitialAd) {
+        ad.dispose();
       } else if (ad is AppOpenAd) {
         ad.dispose();
       }

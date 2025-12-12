@@ -117,10 +117,4 @@ class EasySocialShare {
 
     config.onError?.call(error);
   }
-
-  /// Reset singleton (for testing)
-  @visibleForTesting
-  void reset() {
-    _config = null;
-  }
 }
