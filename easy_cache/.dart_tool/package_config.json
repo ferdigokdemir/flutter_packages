@@ -57,9 +57,9 @@
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/meta-1.16.0",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/meta-1.17.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.5"
     },
     {
       "name": "path",
@@ -99,19 +99,19 @@
     },
     {
       "name": "shared_preferences",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/shared_preferences-2.5.3",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/shared_preferences-2.5.4",
       "packageUri": "lib/",
-      "languageVersion": "3.5"
+      "languageVersion": "3.9"
     },
     {
       "name": "shared_preferences_android",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/shared_preferences_android-2.4.15",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/shared_preferences_android-2.4.18",
       "packageUri": "lib/",
       "languageVersion": "3.9"
     },
     {
       "name": "shared_preferences_foundation",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/shared_preferences_foundation-2.5.5",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/shared_preferences_foundation-2.5.6",
       "packageUri": "lib/",
       "languageVersion": "3.9"
     },
@@ -171,8 +171,8 @@
     }
   ],
   "generator": "pub",
-  "generatorVersion": "3.9.2",
+  "generatorVersion": "3.10.3",
   "flutterRoot": "file:///Users/ferdigokdemir/Desktop/flutter",
-  "flutterVersion": "3.35.7",
+  "flutterVersion": "3.38.4",
   "pubCache": "file:///Users/ferdigokdemir/.pub-cache"
 }

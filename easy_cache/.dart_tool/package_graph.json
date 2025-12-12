@@ -22,19 +22,6 @@
       ]
     },
     {
-      "name": "shared_preferences",
-      "version": "2.5.3",
-      "dependencies": [
-        "flutter",
-        "shared_preferences_android",
-        "shared_preferences_foundation",
-        "shared_preferences_linux",
-        "shared_preferences_platform_interface",
-        "shared_preferences_web",
-        "shared_preferences_windows"
-      ]
-    },
-    {
       "name": "flutter",
       "version": "0.0.0",
       "dependencies": [
@@ -47,9 +34,54 @@
       ]
     },
     {
+      "name": "vector_math",
+      "version": "2.2.0",
+      "dependencies": []
+    },
+    {
+      "name": "sky_engine",
+      "version": "0.0.0",
+      "dependencies": []
+    },
+    {
+      "name": "meta",
+      "version": "1.17.0",
+      "dependencies": []
+    },
+    {
+      "name": "material_color_utilities",
+      "version": "0.11.1",
+      "dependencies": [
+        "collection"
+      ]
+    },
+    {
+      "name": "collection",
+      "version": "1.19.1",
+      "dependencies": []
+    },
+    {
+      "name": "characters",
+      "version": "1.4.0",
+      "dependencies": []
+    },
+    {
       "name": "lints",
       "version": "5.1.1",
       "dependencies": []
+    },
+    {
+      "name": "shared_preferences",
+      "version": "2.5.4",
+      "dependencies": [
+        "flutter",
+        "shared_preferences_android",
+        "shared_preferences_foundation",
+        "shared_preferences_linux",
+        "shared_preferences_platform_interface",
+        "shared_preferences_web",
+        "shared_preferences_windows"
+      ]
     },
     {
       "name": "shared_preferences_windows",
@@ -61,16 +93,6 @@
         "path_provider_platform_interface",
         "path_provider_windows",
         "shared_preferences_platform_interface"
-      ]
-    },
-    {
-      "name": "shared_preferences_web",
-      "version": "2.4.3",
-      "dependencies": [
-        "flutter",
-        "flutter_web_plugins",
-        "shared_preferences_platform_interface",
-        "web"
       ]
     },
     {
@@ -94,61 +116,53 @@
       ]
     },
     {
-      "name": "shared_preferences_foundation",
-      "version": "2.5.5",
+      "name": "plugin_platform_interface",
+      "version": "2.1.8",
       "dependencies": [
-        "flutter",
-        "shared_preferences_platform_interface"
+        "meta"
       ]
     },
     {
-      "name": "shared_preferences_android",
-      "version": "2.4.15",
+      "name": "shared_preferences_web",
+      "version": "2.4.3",
       "dependencies": [
         "flutter",
-        "shared_preferences_platform_interface"
+        "flutter_web_plugins",
+        "shared_preferences_platform_interface",
+        "web"
       ]
     },
     {
-      "name": "sky_engine",
+      "name": "flutter_web_plugins",
       "version": "0.0.0",
-      "dependencies": []
-    },
-    {
-      "name": "vector_math",
-      "version": "2.2.0",
-      "dependencies": []
-    },
-    {
-      "name": "meta",
-      "version": "1.16.0",
-      "dependencies": []
-    },
-    {
-      "name": "material_color_utilities",
-      "version": "0.11.1",
       "dependencies": [
-        "collection"
+        "flutter"
       ]
     },
     {
-      "name": "collection",
-      "version": "1.19.1",
+      "name": "web",
+      "version": "1.1.1",
       "dependencies": []
     },
     {
-      "name": "characters",
-      "version": "1.4.0",
+      "name": "path",
+      "version": "1.9.1",
       "dependencies": []
     },
     {
-      "name": "path_provider_windows",
-      "version": "2.3.0",
+      "name": "shared_preferences_foundation",
+      "version": "2.5.6",
       "dependencies": [
-        "ffi",
         "flutter",
-        "path",
-        "path_provider_platform_interface"
+        "shared_preferences_platform_interface"
+      ]
+    },
+    {
+      "name": "file",
+      "version": "7.0.1",
+      "dependencies": [
+        "meta",
+        "path"
       ]
     },
     {
@@ -161,36 +175,9 @@
       ]
     },
     {
-      "name": "path",
-      "version": "1.9.1",
+      "name": "platform",
+      "version": "3.1.6",
       "dependencies": []
-    },
-    {
-      "name": "file",
-      "version": "7.0.1",
-      "dependencies": [
-        "meta",
-        "path"
-      ]
-    },
-    {
-      "name": "web",
-      "version": "1.1.1",
-      "dependencies": []
-    },
-    {
-      "name": "flutter_web_plugins",
-      "version": "0.0.0",
-      "dependencies": [
-        "flutter"
-      ]
-    },
-    {
-      "name": "plugin_platform_interface",
-      "version": "2.1.8",
-      "dependencies": [
-        "meta"
-      ]
     },
     {
       "name": "path_provider_linux",
@@ -204,21 +191,34 @@
       ]
     },
     {
-      "name": "ffi",
-      "version": "2.1.4",
-      "dependencies": []
-    },
-    {
-      "name": "platform",
-      "version": "3.1.6",
-      "dependencies": []
-    },
-    {
       "name": "xdg_directories",
       "version": "1.1.0",
       "dependencies": [
         "meta",
         "path"
+      ]
+    },
+    {
+      "name": "ffi",
+      "version": "2.1.4",
+      "dependencies": []
+    },
+    {
+      "name": "path_provider_windows",
+      "version": "2.3.0",
+      "dependencies": [
+        "ffi",
+        "flutter",
+        "path",
+        "path_provider_platform_interface"
+      ]
+    },
+    {
+      "name": "shared_preferences_android",
+      "version": "2.4.18",
+      "dependencies": [
+        "flutter",
+        "shared_preferences_platform_interface"
       ]
     }
   ],

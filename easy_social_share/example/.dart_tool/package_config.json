@@ -33,13 +33,13 @@
     },
     {
       "name": "cross_file",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/cross_file-0.3.4+2",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/cross_file-0.3.5+1",
       "packageUri": "lib/",
-      "languageVersion": "3.3"
+      "languageVersion": "3.8"
     },
     {
       "name": "crypto",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/crypto-3.0.6",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/crypto-3.0.7",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
@@ -135,9 +135,9 @@
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/meta-1.16.0",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/meta-1.17.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.5"
     },
     {
       "name": "mime",
@@ -159,15 +159,15 @@
     },
     {
       "name": "path_provider_android",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/path_provider_android-2.2.19",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/path_provider_android-2.2.22",
       "packageUri": "lib/",
-      "languageVersion": "3.7"
+      "languageVersion": "3.9"
     },
     {
       "name": "path_provider_foundation",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/path_provider_foundation-2.4.2",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/path_provider_foundation-2.5.1",
       "packageUri": "lib/",
-      "languageVersion": "3.7"
+      "languageVersion": "3.9"
     },
     {
       "name": "path_provider_linux",
@@ -242,12 +242,6 @@
       "languageVersion": "3.1"
     },
     {
-      "name": "sprintf",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/sprintf-7.0.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "stack_trace",
       "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/stack_trace-1.12.1",
       "packageUri": "lib/",
@@ -273,7 +267,7 @@
     },
     {
       "name": "test_api",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/test_api-0.7.6",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/test_api-0.7.7",
       "packageUri": "lib/",
       "languageVersion": "3.5"
     },
@@ -285,9 +279,9 @@
     },
     {
       "name": "url_launcher_linux",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/url_launcher_linux-3.2.1",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/url_launcher_linux-3.2.2",
       "packageUri": "lib/",
-      "languageVersion": "3.3"
+      "languageVersion": "3.8"
     },
     {
       "name": "url_launcher_platform_interface",
@@ -303,13 +297,13 @@
     },
     {
       "name": "url_launcher_windows",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/url_launcher_windows-3.1.4",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/url_launcher_windows-3.1.5",
       "packageUri": "lib/",
-      "languageVersion": "3.4"
+      "languageVersion": "3.8"
     },
     {
       "name": "uuid",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/uuid-4.5.1",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/uuid-4.5.2",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -351,8 +345,8 @@
     }
   ],
   "generator": "pub",
-  "generatorVersion": "3.9.2",
+  "generatorVersion": "3.10.3",
   "flutterRoot": "file:///Users/ferdigokdemir/Desktop/flutter",
-  "flutterVersion": "3.35.7",
+  "flutterVersion": "3.38.4",
   "pubCache": "file:///Users/ferdigokdemir/.pub-cache"
 }

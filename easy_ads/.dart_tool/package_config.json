@@ -45,9 +45,9 @@
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/meta-1.16.0",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/meta-1.17.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.5"
     },
     {
       "name": "path",
@@ -87,7 +87,7 @@
     },
     {
       "name": "webview_flutter_android",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/webview_flutter_android-4.10.5",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/webview_flutter_android-4.10.11",
       "packageUri": "lib/",
       "languageVersion": "3.9"
     },
@@ -99,7 +99,7 @@
     },
     {
       "name": "webview_flutter_wkwebview",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/webview_flutter_wkwebview-3.23.2",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/webview_flutter_wkwebview-3.23.5",
       "packageUri": "lib/",
       "languageVersion": "3.9"
     },
@@ -111,8 +111,8 @@
     }
   ],
   "generator": "pub",
-  "generatorVersion": "3.9.2",
+  "generatorVersion": "3.10.3",
   "flutterRoot": "file:///Users/ferdigokdemir/Desktop/flutter",
-  "flutterVersion": "3.35.7",
+  "flutterVersion": "3.38.4",
   "pubCache": "file:///Users/ferdigokdemir/.pub-cache"
 }
