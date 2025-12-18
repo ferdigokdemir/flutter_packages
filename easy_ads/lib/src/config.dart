@@ -11,6 +11,14 @@ class EasyAdsConfig {
   final int interstitialPoolSize;
   final int rewardedPoolSize;
 
+  /// Cooldown period in seconds between interstitial ads.
+  /// Default is 60 seconds. Set to 0 to disable cooldown.
+  final int interstitialCooldownSeconds;
+
+  /// Cooldown period in seconds between rewarded ads.
+  /// Default is 0 (no cooldown).
+  final int rewardedCooldownSeconds;
+
   const EasyAdsConfig({
     required this.adsEnabled,
     required this.interstitialAdUnitId,
@@ -23,5 +31,7 @@ class EasyAdsConfig {
     this.maxRetryAttempts = 3,
     this.interstitialPoolSize = 3,
     this.rewardedPoolSize = 3,
+    this.interstitialCooldownSeconds = 60,
+    this.rewardedCooldownSeconds = 0,
   });
 }
