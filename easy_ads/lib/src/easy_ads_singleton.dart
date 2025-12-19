@@ -34,10 +34,6 @@ class EasyAds with WidgetsBindingObserver {
     await instance._service?.applyRequestConfiguration();
   }
 
-  static Future<void> warmUp() async {
-    await instance._service?.warmUp();
-  }
-
   static void showAd(AdType type, {required AdResultCallback onResult}) {
     if (instance._service == null) {
       throw StateError(
@@ -56,10 +52,7 @@ class EasyAds with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      // Background'dan dönüşte fresh reklam yükle
-      warmUp();
-    }
+    // Lifecycle state changes are monitored but no action needed
   }
 
   /// Lifecycle observer'ı temizle

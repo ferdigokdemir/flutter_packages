@@ -2,28 +2,11 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:retry/retry.dart';
-import 'ad_pool.dart';
 import 'config.dart';
 import 'models.dart';
 
 class EasyAdsService {
-  EasyAdsService(this.config) {
-    _interstitialPool = AdPool<InterstitialAd>(
-      type: AdType.interstitial,
-      maxSize: config.interstitialPoolSize,
-      loadAd: _loadInterstitialAd,
-    );
-    _rewardedPool = AdPool<RewardedAd>(
-      type: AdType.rewarded,
-      maxSize: config.rewardedPoolSize,
-      loadAd: _loadRewardedAd,
-    );
-    _rewardedInterstitialPool = AdPool<RewardedInterstitialAd>(
-      type: AdType.rewardedInterstitial,
-      maxSize: config.rewardedInterstitialPoolSize,
-      loadAd: _loadRewardedInterstitialAd,
-    );
-  }
+  EasyAdsService(this.config);
 
   final EasyAdsConfig config;
 
@@ -33,88 +16,10 @@ class EasyAdsService {
   static bool _isLoadingRewardedInterstitial = false;
   static bool _isLoadingAppOpen = false;
 
-  late final AdPool<InterstitialAd> _interstitialPool;
-  late final AdPool<RewardedAd> _rewardedPool;
-  late final AdPool<RewardedInterstitialAd> _rewardedInterstitialPool;
-
-  /// Tracks the last time an interstitial ad was shown
-  DateTime? _lastInterstitialShownAt;
-
-  /// Tracks the last time a rewarded ad was shown
-  DateTime? _lastRewardedShownAt;
-
-  /// Tracks the last time a rewarded interstitial ad was shown
-  DateTime? _lastRewardedInterstitialShownAt;
-
-  /// Checks if interstitial cooldown has expired
-  bool get _isInterstitialCooldownExpired {
-    if (config.interstitialCooldownSeconds <= 0) return true;
-    if (_lastInterstitialShownAt == null) return true;
-    final elapsed =
-        DateTime.now().difference(_lastInterstitialShownAt!).inSeconds;
-    return elapsed >= config.interstitialCooldownSeconds;
-  }
-
-  /// Checks if rewarded cooldown has expired
-  bool get _isRewardedCooldownExpired {
-    if (config.rewardedCooldownSeconds <= 0) return true;
-    if (_lastRewardedShownAt == null) return true;
-    final elapsed = DateTime.now().difference(_lastRewardedShownAt!).inSeconds;
-    return elapsed >= config.rewardedCooldownSeconds;
-  }
-
-  /// Checks if rewarded interstitial cooldown has expired
-  bool get _isRewardedInterstitialCooldownExpired {
-    if (config.rewardedInterstitialCooldownSeconds <= 0) return true;
-    if (_lastRewardedInterstitialShownAt == null) return true;
-    final elapsed =
-        DateTime.now().difference(_lastRewardedInterstitialShownAt!).inSeconds;
-    return elapsed >= config.rewardedInterstitialCooldownSeconds;
-  }
-
-  /// Gets remaining cooldown seconds for interstitial ads
-  int get interstitialCooldownRemaining {
-    if (config.interstitialCooldownSeconds <= 0) return 0;
-    if (_lastInterstitialShownAt == null) return 0;
-    final elapsed =
-        DateTime.now().difference(_lastInterstitialShownAt!).inSeconds;
-    final remaining = config.interstitialCooldownSeconds - elapsed;
-    return remaining > 0 ? remaining : 0;
-  }
-
-  /// Gets remaining cooldown seconds for rewarded ads
-  int get rewardedCooldownRemaining {
-    if (config.rewardedCooldownSeconds <= 0) return 0;
-    if (_lastRewardedShownAt == null) return 0;
-    final elapsed = DateTime.now().difference(_lastRewardedShownAt!).inSeconds;
-    final remaining = config.rewardedCooldownSeconds - elapsed;
-    return remaining > 0 ? remaining : 0;
-  }
-
-  /// Gets remaining cooldown seconds for rewarded interstitial ads
-  int get rewardedInterstitialCooldownRemaining {
-    if (config.rewardedInterstitialCooldownSeconds <= 0) return 0;
-    if (_lastRewardedInterstitialShownAt == null) return 0;
-    final elapsed =
-        DateTime.now().difference(_lastRewardedInterstitialShownAt!).inSeconds;
-    final remaining = config.rewardedInterstitialCooldownSeconds - elapsed;
-    return remaining > 0 ? remaining : 0;
-  }
-
   Future<void> initialize() async {
     if (_isInitialized) return;
     await MobileAds.instance.initialize();
     _isInitialized = true;
-  }
-
-  Future<void> warmUp() async {
-    if (!config.adsEnabled) return;
-    if (!_isInitialized) await initialize();
-    await Future.wait([
-      _interstitialPool.refill(),
-      _rewardedPool.refill(),
-      _rewardedInterstitialPool.refill(),
-    ]);
   }
 
   void showAd(AdType type, {required AdResultCallback onResult}) {
@@ -146,18 +51,6 @@ class EasyAdsService {
       ));
       return;
     }
-    if (!_isInterstitialCooldownExpired) {
-      onResult(AdResponse(
-        type: AdType.interstitial,
-        status: AdStatus.error,
-        shown: false,
-        dismissed: false,
-        error:
-            'Cooldown not expired. ${interstitialCooldownRemaining}s remaining',
-        errorCode: AdErrorCode.cooldownNotExpired,
-      ));
-      return;
-    }
     if (_isLoadingInterstitial) {
       onResult(const AdResponse(
         type: AdType.interstitial,
@@ -172,7 +65,7 @@ class EasyAdsService {
 
     _isLoadingInterstitial = true;
     try {
-      final ad = _interstitialPool.getAd() ?? await _loadInterstitialAd();
+      final ad = await _loadInterstitialAd();
       if (ad == null) {
         _isLoadingInterstitial = false;
         onResult(const AdResponse(
@@ -191,7 +84,6 @@ class EasyAdsService {
       ad.fullScreenContentCallback = FullScreenContentCallback(
         onAdShowedFullScreenContent: (ad) {
           wasShown = true;
-          _lastInterstitialShownAt = DateTime.now();
         },
         onAdDismissedFullScreenContent: (ad) async {
           await ad.dispose();
@@ -243,17 +135,6 @@ class EasyAdsService {
       ));
       return;
     }
-    if (!_isRewardedCooldownExpired) {
-      onResult(AdResponse(
-        type: AdType.rewarded,
-        status: AdStatus.error,
-        shown: false,
-        dismissed: false,
-        error: 'Cooldown not expired. ${rewardedCooldownRemaining}s remaining',
-        errorCode: AdErrorCode.cooldownNotExpired,
-      ));
-      return;
-    }
     if (_isLoadingRewarded) {
       onResult(const AdResponse(
         type: AdType.rewarded,
@@ -268,7 +149,7 @@ class EasyAdsService {
 
     _isLoadingRewarded = true;
     try {
-      final ad = _rewardedPool.getAd() ?? await _loadRewardedAd();
+      final ad = await _loadRewardedAd();
       if (ad == null) {
         _isLoadingRewarded = false;
         onResult(const AdResponse(
@@ -288,7 +169,6 @@ class EasyAdsService {
       ad.fullScreenContentCallback = FullScreenContentCallback(
         onAdShowedFullScreenContent: (ad) {
           wasShown = true;
-          _lastRewardedShownAt = DateTime.now();
         },
         onAdDismissedFullScreenContent: (ad) async {
           await ad.dispose();
@@ -346,18 +226,6 @@ class EasyAdsService {
       ));
       return;
     }
-    if (!_isRewardedInterstitialCooldownExpired) {
-      onResult(AdResponse(
-        type: AdType.rewardedInterstitial,
-        status: AdStatus.error,
-        shown: false,
-        dismissed: false,
-        error:
-            'Cooldown not expired. ${rewardedInterstitialCooldownRemaining}s remaining',
-        errorCode: AdErrorCode.cooldownNotExpired,
-      ));
-      return;
-    }
     if (_isLoadingRewardedInterstitial) {
       onResult(const AdResponse(
         type: AdType.rewardedInterstitial,
@@ -372,8 +240,7 @@ class EasyAdsService {
 
     _isLoadingRewardedInterstitial = true;
     try {
-      final ad = _rewardedInterstitialPool.getAd() ??
-          await _loadRewardedInterstitialAd();
+      final ad = await _loadRewardedInterstitialAd();
       if (ad == null) {
         _isLoadingRewardedInterstitial = false;
         onResult(const AdResponse(
@@ -393,7 +260,6 @@ class EasyAdsService {
       ad.fullScreenContentCallback = FullScreenContentCallback(
         onAdShowedFullScreenContent: (ad) {
           wasShown = true;
-          _lastRewardedInterstitialShownAt = DateTime.now();
         },
         onAdDismissedFullScreenContent: (ad) async {
           await ad.dispose();

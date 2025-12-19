@@ -14,7 +14,6 @@ enum AdErrorCode {
   showTimeout,
   loadFailed,
   showFailed,
-  cooldownNotExpired,
 }
 
 class AdResponse {
