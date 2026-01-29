@@ -129,6 +129,8 @@ class _EasySpinWheelState extends State<EasySpinWheel>
 
     // Complete spin after duration
     Future.delayed(widget.config.spinDuration, () {
+      if (!mounted) return;
+
       final result = SpinWheelResult(
         reward: widget.config.rewards[index],
         index: index,
@@ -136,16 +138,13 @@ class _EasySpinWheelState extends State<EasySpinWheel>
 
       setState(() {
         _isSpinning = false;
-      });
-
-      // Show confetti
-      setState(() {
         _showConfetti = true;
       });
       _confettiController?.play();
 
       // Wait for confetti to finish, then close dialog
       Future.delayed(widget.config.confettiDuration, () {
+        if (!mounted) return;
         widget.onComplete(result);
       });
     });
