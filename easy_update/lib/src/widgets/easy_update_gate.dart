@@ -1,8 +1,5 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-
 import '../services/version_check_service.dart';
 import '../models/version_check_status.dart';
 
@@ -19,17 +16,25 @@ class EasyUpdateGate extends StatefulWidget {
   final bool forceUpdate;
   final Widget child;
 
+  /// Android Play Store URL
+  final String? androidStoreUrl;
+
+  /// iOS App Store URL
+  final String? iosStoreUrl;
+
   /// Güncelleme gerekli olduğunda dialog yerine döndürülecek widget.
   /// Örn: Tam ekran bir Scaffold.
   /// VersionCheckStatus ile forceUpdate/storeUrl vb. bilgilere erişebilirsiniz.
-  final EasyUpdateBuilder updateBuilder;
+  final EasyUpdateBuilder? updateBuilder;
 
   const EasyUpdateGate({
     super.key,
-    required this.minimumVersion,
-    required this.forceUpdate,
-    required this.child,
-    required this.updateBuilder,
+    this.minimumVersion = '0.0.0',
+    this.forceUpdate = false,
+    this.child = const SizedBox.shrink(),
+    this.androidStoreUrl,
+    this.iosStoreUrl,
+    this.updateBuilder,
   });
 
   @override
@@ -52,7 +57,7 @@ class _EasyUpdateGateState extends State<EasyUpdateGate> {
       final service = VersionCheckService(
         minimumVersion: widget.minimumVersion,
         forceUpdate: widget.forceUpdate,
-        storeUrl: await _buildStoreUrl(),
+        storeUrl: _getStoreUrl(),
       );
 
       final status = await service.checkForUpdates();
@@ -70,29 +75,22 @@ class _EasyUpdateGateState extends State<EasyUpdateGate> {
     } finally {}
   }
 
-  /// Platforma göre store URL üret
-  /// - Android: Play Store paket adına göre
-  /// - iOS: App adı ile arama sonucu (ID bilinmiyorsa)
-  Future<String> _buildStoreUrl() async {
-    try {
-      final info = await PackageInfo.fromPlatform();
-      if (Platform.isAndroid) {
-        return 'https://play.google.com/store/apps/details?id=${info.packageName}';
-      }
-      if (Platform.isIOS) {
-        final appName = Uri.encodeComponent(info.appName);
-        // AppStore ID bilinmiyorsa arama sayfasına yönlendir
-        return 'https://apps.apple.com/tr/search?term=$appName';
-      }
-    } catch (_) {}
+  /// Platforma göre store URL döndür
+  String _getStoreUrl() {
+    if (Platform.isAndroid) {
+      return widget.androidStoreUrl ?? '';
+    }
+    if (Platform.isIOS) {
+      return widget.iosStoreUrl ?? '';
+    }
     return '';
   }
 
   @override
   Widget build(BuildContext context) {
-    // Güncelleme gerekli ise özel builder'ı döndür
-    if (_updateRequired && _status != null) {
-      return widget.updateBuilder(context, _status!);
+    // Güncelleme gerekli ise özel builder'ı döndür (eğer builder varsa)
+    if (_updateRequired && _status != null && widget.updateBuilder != null) {
+      return widget.updateBuilder!(context, _status!);
     }
 
     // Aksi halde normal child'ı döndür
