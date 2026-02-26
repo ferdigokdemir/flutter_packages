@@ -16,13 +16,13 @@ import 'version_check_service.dart';
 /// ```dart
 /// // 1️⃣ Başlangıçta init et
 /// await EasyUpdate.instance.init(
-///   android: (
+///   android: EasyUpdatePlatformConfig(
 ///     version: '2.0.0',
 ///     storeUrl: 'https://play.google.com/store/apps/details?id=...',
 ///     force: true,
 ///     locale: 'tr',
 ///   ),
-///   ios: (
+///   ios: EasyUpdatePlatformConfig(
 ///     version: '2.1.0',
 ///     storeUrl: 'https://apps.apple.com/app/...',
 ///     force: false,
@@ -43,7 +43,7 @@ class EasyUpdate {
 
   late VersionCheckService _service;
   VersionCheckStatus? _lastStatus;
-  PlatformConfig? _currentConfig;
+  EasyUpdatePlatformConfig? _currentConfig;
   String _locale = 'en';
 
   EasyUpdate._internal();
@@ -67,9 +67,12 @@ class EasyUpdate {
   /// 🔧 Servisi initialize et
   ///
   /// Platform bazlı konfigürasyonları alır.
-  /// [android] - Android için PlatformConfig
-  /// [ios] - iOS için PlatformConfig
-  Future<void> init({PlatformConfig? android, PlatformConfig? ios}) async {
+  /// [android] - Android için EasyUpdatePlatformConfig
+  /// [ios] - iOS için EasyUpdatePlatformConfig
+  Future<void> init({
+    EasyUpdatePlatformConfig? android,
+    EasyUpdatePlatformConfig? ios,
+  }) async {
     // Platforma göre config seç
     _currentConfig = _getPlatformConfig(android, ios);
 
@@ -92,9 +95,9 @@ class EasyUpdate {
   }
 
   /// Platforma göre config döndür
-  PlatformConfig? _getPlatformConfig(
-    PlatformConfig? android,
-    PlatformConfig? ios,
+  EasyUpdatePlatformConfig? _getPlatformConfig(
+    EasyUpdatePlatformConfig? android,
+    EasyUpdatePlatformConfig? ios,
   ) {
     if (Platform.isAndroid) {
       return android;

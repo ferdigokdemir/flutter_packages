@@ -8,15 +8,15 @@ typedef EasyUpdateBuilder =
 
 /// EasyUpdateGate
 ///
-/// - Dışarıdan android ve ios PlatformConfig alır.
+/// - Dışarıdan android ve ios EasyUpdatePlatformConfig alır.
 /// - Versiyon kontrolünü yapar, gerekiyorsa update dialog'unu kendi açar.
 /// - Zorunlu update mantığı: force true ise ve currentVersion < version ise kullanıcıyı engeller.
 class EasyUpdateGate extends StatefulWidget {
-  /// Android için PlatformConfig
-  final PlatformConfig? android;
+  /// Android için EasyUpdatePlatformConfig
+  final EasyUpdatePlatformConfig? android;
 
-  /// iOS için PlatformConfig
-  final PlatformConfig? ios;
+  /// iOS için EasyUpdatePlatformConfig
+  final EasyUpdatePlatformConfig? ios;
 
   final Widget child;
 
@@ -79,7 +79,7 @@ class _EasyUpdateGateState extends State<EasyUpdateGate> {
   }
 
   /// Platforma göre config döndür
-  PlatformConfig? _getPlatformConfig() {
+  EasyUpdatePlatformConfig? _getPlatformConfig() {
     if (Platform.isAndroid) {
       return widget.android;
     }

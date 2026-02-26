@@ -30,13 +30,13 @@ import 'package:easy_update/easy_update.dart';
 
 // 1️⃣ App başlangıcında init et
 await EasyUpdate.instance.init(
-  android: (
+  android: EasyUpdatePlatformConfig(
     version: remoteConfig.getString('MIN_VERSION_ANDROID'),
     storeUrl: 'https://play.google.com/store/apps/details?id=...',
     force: remoteConfig.getBool('FORCE_UPDATE_ANDROID'),
     locale: 'tr',
   ),
-  ios: (
+  ios: EasyUpdatePlatformConfig(
     version: remoteConfig.getString('MIN_VERSION_IOS'),
     storeUrl: 'https://apps.apple.com/app/...',
     force: remoteConfig.getBool('FORCE_UPDATE_IOS'),
@@ -61,13 +61,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return EasyUpdateGate(
-      android: (
+      android: EasyUpdatePlatformConfig(
         version: '2.0.0',
         storeUrl: 'https://play.google.com/store/apps/details?id=...',
         force: true,
         locale: 'tr',
       ),
-      ios: (
+      ios: EasyUpdatePlatformConfig(
         version: '2.1.0',
         storeUrl: 'https://apps.apple.com/app/...',
         force: false,
@@ -112,15 +112,22 @@ Firebase Console veya kendi backend'inizde şu parametreleri tanımlayın:
 | `STORE_URL_ANDROID` | String | `"https://play.google.com/..."` | Play Store linki |
 | `STORE_URL_IOS` | String | `"https://apps.apple.com/..."` | App Store linki |
 
-## 🎯 PlatformConfig Record Type
+## 🎯 EasyUpdatePlatformConfig
 
 ```dart
-typedef PlatformConfig = ({
-  String version,    // Minimum gerekli versiyon
-  String storeUrl,   // Store URL
-  bool force,        // Zorunlu güncelleme mi?
-  String locale,     // Dialog dili (tr, en, de...)
-});
+class EasyUpdatePlatformConfig {
+  final String version;    // Minimum gerekli versiyon
+  final String storeUrl;   // Store URL
+  final bool force;        // Zorunlu güncelleme mi? (varsayılan: false)
+  final String locale;     // Dialog dili (varsayılan: 'en')
+
+  const EasyUpdatePlatformConfig({
+    required this.version,
+    required this.storeUrl,
+    this.force = false,
+    this.locale = 'en',
+  });
+}
 ```
 
 ## 📊 VersionCheckStatus
@@ -162,13 +169,13 @@ class VersionCheckStatus {
 ```dart
 // Singleton ile - her platform için farklı dil
 await EasyUpdate.instance.init(
-  android: (
+  android: EasyUpdatePlatformConfig(
     version: '2.0.0',
     storeUrl: '...',
     force: true,
     locale: 'ja', // Japonca
   ),
-  ios: (
+  ios: EasyUpdatePlatformConfig(
     version: '2.1.0',
     storeUrl: '...',
     force: false,
