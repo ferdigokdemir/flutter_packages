@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -16,6 +18,8 @@ import 'version_check_service.dart';
 /// await EasyUpdate.instance.init(
 ///   minimumVersion: RemoteConfig.instance.minimumVersion,
 ///   forceUpdate: RemoteConfig.instance.forceUpdate,
+///   androidStoreUrl: 'https://play.google.com/store/apps/details?id=...',
+///   iosStoreUrl: 'https://apps.apple.com/app/...',
 /// );
 ///
 /// // 2️⃣ Status kontrol et
@@ -55,11 +59,14 @@ class EasyUpdate {
   /// 🔧 Servisi initialize et
   ///
   /// RemoteConfig değerlerini iletilir.
+  /// [androidStoreUrl] - Play Store URL
+  /// [iosStoreUrl] - App Store URL
   /// [locale] - Dil kodu: tr, en, es, pt, de (varsayılan: en)
   Future<void> init({
     required String minimumVersion,
     required bool forceUpdate,
-    required String storeUrl,
+    String? androidStoreUrl,
+    String? iosStoreUrl,
     String locale = 'en',
   }) async {
     _minimumVersion = minimumVersion;
@@ -68,12 +75,23 @@ class EasyUpdate {
     _service = VersionCheckService(
       minimumVersion: minimumVersion,
       forceUpdate: forceUpdate,
-      storeUrl: storeUrl,
+      storeUrl: _getStoreUrl(androidStoreUrl, iosStoreUrl),
     );
 
     debugPrint(
       '✅ [EasyUpdate] Initialized: v$minimumVersion (force: $forceUpdate, locale: $_locale)',
     );
+  }
+
+  /// Platforma göre store URL döndür
+  String _getStoreUrl(String? androidStoreUrl, String? iosStoreUrl) {
+    if (Platform.isAndroid) {
+      return androidStoreUrl ?? '';
+    }
+    if (Platform.isIOS) {
+      return iosStoreUrl ?? '';
+    }
+    return '';
   }
 
   /// 🔍 Version check yap

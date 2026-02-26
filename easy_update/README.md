@@ -32,9 +32,8 @@ import 'package:easy_update/easy_update.dart';
 await EasyUpdate.instance.init(
   minimumVersion: remoteConfig.getString('MIN_VERSION'),
   forceUpdate: remoteConfig.getBool('FORCE_UPDATE'),
-  storeUrl: Platform.isIOS 
-    ? 'https://apps.apple.com/app/...'
-    : 'https://play.google.com/store/apps/details?id=...',
+  androidStoreUrl: 'https://play.google.com/store/apps/details?id=...',
+  iosStoreUrl: 'https://apps.apple.com/app/...',
   locale: 'tr', // Opsiyonel: tr, en, de, es, fr, ja, ko, zh...
 );
 
