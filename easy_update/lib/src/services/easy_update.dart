@@ -16,10 +16,18 @@ import 'version_check_service.dart';
 /// ```dart
 /// // 1️⃣ Başlangıçta init et
 /// await EasyUpdate.instance.init(
-///   version: '2.0.0',
-///   force: true,
-///   playStoreUrl: 'https://play.google.com/store/apps/details?id=...',
-///   appStoreUrl: 'https://apps.apple.com/app/...',
+///   android: (
+///     version: '2.0.0',
+///     storeUrl: 'https://play.google.com/store/apps/details?id=...',
+///     force: true,
+///     locale: 'tr',
+///   ),
+///   ios: (
+///     version: '2.1.0',
+///     storeUrl: 'https://apps.apple.com/app/...',
+///     force: false,
+///     locale: 'en',
+///   ),
 /// );
 ///
 /// // 2️⃣ Status kontrol et
@@ -35,7 +43,7 @@ class EasyUpdate {
 
   late VersionCheckService _service;
   VersionCheckStatus? _lastStatus;
-  String _version = '0.0.0';
+  PlatformConfig? _currentConfig;
   String _locale = 'en';
 
   EasyUpdate._internal();
@@ -58,40 +66,43 @@ class EasyUpdate {
 
   /// 🔧 Servisi initialize et
   ///
-  /// RemoteConfig değerlerini iletilir.
-  /// [playStoreUrl] - Play Store URL
-  /// [appStoreUrl] - App Store URL
-  /// [locale] - Dil kodu: tr, en, es, pt, de (varsayılan: en)
-  Future<void> init({
-    required String version,
-    bool force = false,
-    String? playStoreUrl,
-    String? appStoreUrl,
-    String locale = 'en',
-  }) async {
-    _version = version;
-    this.locale = locale;
+  /// Platform bazlı konfigürasyonları alır.
+  /// [android] - Android için PlatformConfig
+  /// [ios] - iOS için PlatformConfig
+  Future<void> init({PlatformConfig? android, PlatformConfig? ios}) async {
+    // Platforma göre config seç
+    _currentConfig = _getPlatformConfig(android, ios);
+
+    if (_currentConfig == null) {
+      debugPrint('⚠️ [EasyUpdate] No config for current platform');
+      return;
+    }
+
+    this.locale = _currentConfig!.locale;
 
     _service = VersionCheckService(
-      version: version,
-      force: force,
-      storeUrl: _getStoreUrl(playStoreUrl, appStoreUrl),
+      version: _currentConfig!.version,
+      force: _currentConfig!.force,
+      storeUrl: _currentConfig!.storeUrl,
     );
 
     debugPrint(
-      '✅ [EasyUpdate] Initialized: v$version (force: $force, locale: $_locale)',
+      '✅ [EasyUpdate] Initialized: v${_currentConfig!.version} (force: ${_currentConfig!.force}, locale: $_locale)',
     );
   }
 
-  /// Platforma göre store URL döndür
-  String _getStoreUrl(String? playStoreUrl, String? appStoreUrl) {
+  /// Platforma göre config döndür
+  PlatformConfig? _getPlatformConfig(
+    PlatformConfig? android,
+    PlatformConfig? ios,
+  ) {
     if (Platform.isAndroid) {
-      return playStoreUrl ?? '';
+      return android;
     }
     if (Platform.isIOS) {
-      return appStoreUrl ?? '';
+      return ios;
     }
-    return '';
+    return null;
   }
 
   /// 🔍 Version check yap
@@ -99,6 +110,17 @@ class EasyUpdate {
   /// Status'u döndürür ve cache'e kaydeder.
   /// Eğer kullanıcı "Hatırlatma" skiplediyse, o sürümü check etmez.
   Future<VersionCheckStatus> check() async {
+    if (_currentConfig == null) {
+      debugPrint('⚠️ [EasyUpdate] Not initialized for current platform');
+      return VersionCheckStatus(
+        updateRequired: false,
+        force: false,
+        storeUrl: '',
+        currentVersion: '0.0.0',
+        version: '0.0.0',
+      );
+    }
+
     try {
       // SharedPreferences'ten skip edilen versiyonu al
       final prefs = await SharedPreferences.getInstance();
@@ -129,7 +151,7 @@ class EasyUpdate {
         force: false,
         storeUrl: '',
         currentVersion: '0.0.0',
-        version: _version,
+        version: _currentConfig!.version,
       );
     }
   }

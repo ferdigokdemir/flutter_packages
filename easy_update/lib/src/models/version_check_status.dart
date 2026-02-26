@@ -1,3 +1,13 @@
+/// 🎯 Platform Config Record Type
+///
+/// Her platform için versiyon, store URL, force ve locale bilgilerini içerir.
+typedef PlatformConfig = ({
+  String version,
+  String storeUrl,
+  bool force,
+  String locale,
+});
+
 /// 📋 Version Check Sonuç Modeli
 ///
 /// Version check işleminin sonucunu içerir.

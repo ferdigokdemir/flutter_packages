@@ -30,11 +30,18 @@ import 'package:easy_update/easy_update.dart';
 
 // 1️⃣ App başlangıcında init et
 await EasyUpdate.instance.init(
-  version: remoteConfig.getString('MIN_VERSION'),
-  force: remoteConfig.getBool('FORCE_UPDATE'),
-  playStoreUrl: 'https://play.google.com/store/apps/details?id=...',
-  appStoreUrl: 'https://apps.apple.com/app/...',
-  locale: 'tr', // Opsiyonel: tr, en, de, es, fr, ja, ko, zh...
+  android: (
+    version: remoteConfig.getString('MIN_VERSION_ANDROID'),
+    storeUrl: 'https://play.google.com/store/apps/details?id=...',
+    force: remoteConfig.getBool('FORCE_UPDATE_ANDROID'),
+    locale: 'tr',
+  ),
+  ios: (
+    version: remoteConfig.getString('MIN_VERSION_IOS'),
+    storeUrl: 'https://apps.apple.com/app/...',
+    force: remoteConfig.getBool('FORCE_UPDATE_IOS'),
+    locale: 'tr',
+  ),
 );
 
 // 2️⃣ Kontrol et ve dialog göster
@@ -54,10 +61,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return EasyUpdateGate(
-      version: '2.0.0',
-      force: true,
-      playStoreUrl: 'https://play.google.com/store/apps/details?id=...',
-      appStoreUrl: 'https://apps.apple.com/app/...',
+      android: (
+        version: '2.0.0',
+        storeUrl: 'https://play.google.com/store/apps/details?id=...',
+        force: true,
+        locale: 'tr',
+      ),
+      ios: (
+        version: '2.1.0',
+        storeUrl: 'https://apps.apple.com/app/...',
+        force: false,
+        locale: 'en',
+      ),
       child: MaterialApp(...),
       // Opsiyonel: Kendi güncelleme ekranınızı oluşturun
       updateBuilder: (context, status) => CustomUpdateScreen(status: status),
@@ -90,10 +105,23 @@ Firebase Console veya kendi backend'inizde şu parametreleri tanımlayın:
 
 | Parametre | Tip | Örnek | Açıklama |
 |-----------|-----|-------|----------|
-| `MIN_VERSION` | String | `"2.0.0"` | Minimum gerekli versiyon |
-| `FORCE_UPDATE` | Bool | `true` | Zorunlu güncelleme mi? |
+| `MIN_VERSION_ANDROID` | String | `"2.0.0"` | Android minimum versiyon |
+| `MIN_VERSION_IOS` | String | `"2.1.0"` | iOS minimum versiyon |
+| `FORCE_UPDATE_ANDROID` | Bool | `true` | Android zorunlu güncelleme mi? |
+| `FORCE_UPDATE_IOS` | Bool | `false` | iOS zorunlu güncelleme mi? |
 | `STORE_URL_ANDROID` | String | `"https://play.google.com/..."` | Play Store linki |
 | `STORE_URL_IOS` | String | `"https://apps.apple.com/..."` | App Store linki |
+
+## 🎯 PlatformConfig Record Type
+
+```dart
+typedef PlatformConfig = ({
+  String version,    // Minimum gerekli versiyon
+  String storeUrl,   // Store URL
+  bool force,        // Zorunlu güncelleme mi?
+  String locale,     // Dialog dili (tr, en, de...)
+});
+```
 
 ## 📊 VersionCheckStatus
 
@@ -132,12 +160,20 @@ class VersionCheckStatus {
 ### Dil Kullanımı
 
 ```dart
-// Singleton ile
+// Singleton ile - her platform için farklı dil
 await EasyUpdate.instance.init(
-  version: '2.0.0',
-  force: true,
-  playStoreUrl: '...',
-  locale: 'ja', // Japonca
+  android: (
+    version: '2.0.0',
+    storeUrl: '...',
+    force: true,
+    locale: 'ja', // Japonca
+  ),
+  ios: (
+    version: '2.1.0',
+    storeUrl: '...',
+    force: false,
+    locale: 'en', // İngilizce
+  ),
 );
 
 // Dialog ile

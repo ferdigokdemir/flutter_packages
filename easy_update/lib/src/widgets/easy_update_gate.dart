@@ -8,19 +8,17 @@ typedef EasyUpdateBuilder =
 
 /// EasyUpdateGate
 ///
-/// - Dışarıdan version ve force alır.
+/// - Dışarıdan android ve ios PlatformConfig alır.
 /// - Versiyon kontrolünü yapar, gerekiyorsa update dialog'unu kendi açar.
 /// - Zorunlu update mantığı: force true ise ve currentVersion < version ise kullanıcıyı engeller.
 class EasyUpdateGate extends StatefulWidget {
-  final String version;
-  final bool force;
+  /// Android için PlatformConfig
+  final PlatformConfig? android;
+
+  /// iOS için PlatformConfig
+  final PlatformConfig? ios;
+
   final Widget child;
-
-  /// Play Store URL
-  final String? playStoreUrl;
-
-  /// App Store URL
-  final String? appStoreUrl;
 
   /// Güncelleme gerekli olduğunda dialog yerine döndürülecek widget.
   /// Örn: Tam ekran bir Scaffold.
@@ -29,11 +27,9 @@ class EasyUpdateGate extends StatefulWidget {
 
   const EasyUpdateGate({
     super.key,
-    this.version = '0.0.0',
-    this.force = false,
+    this.android,
+    this.ios,
     this.child = const SizedBox.shrink(),
-    this.playStoreUrl,
-    this.appStoreUrl,
     this.updateBuilder,
   });
 
@@ -52,12 +48,19 @@ class _EasyUpdateGateState extends State<EasyUpdateGate> {
   }
 
   Future<void> _check() async {
+    // Platforma göre config seç
+    final config = _getPlatformConfig();
+    if (config == null) {
+      debugPrint('⚠️ [EasyUpdateGate] No config for current platform');
+      return;
+    }
+
     try {
-      // Service: version ve force parametreleri ile oluştur
+      // Service: config parametreleri ile oluştur
       final service = VersionCheckService(
-        version: widget.version,
-        force: widget.force,
-        storeUrl: _getStoreUrl(),
+        version: config.version,
+        force: config.force,
+        storeUrl: config.storeUrl,
       );
 
       final status = await service.checkForUpdates();
@@ -75,15 +78,15 @@ class _EasyUpdateGateState extends State<EasyUpdateGate> {
     } finally {}
   }
 
-  /// Platforma göre store URL döndür
-  String _getStoreUrl() {
+  /// Platforma göre config döndür
+  PlatformConfig? _getPlatformConfig() {
     if (Platform.isAndroid) {
-      return widget.playStoreUrl ?? '';
+      return widget.android;
     }
     if (Platform.isIOS) {
-      return widget.appStoreUrl ?? '';
+      return widget.ios;
     }
-    return '';
+    return null;
   }
 
   @override
