@@ -8,32 +8,32 @@ typedef EasyUpdateBuilder =
 
 /// EasyUpdateGate
 ///
-/// - Dışarıdan minimumVersion ve forceUpdate alır.
+/// - Dışarıdan version ve force alır.
 /// - Versiyon kontrolünü yapar, gerekiyorsa update dialog'unu kendi açar.
-/// - Zorunlu update mantığı: forceUpdate true ise ve currentVersion < minimumVersion ise kullanıcıyı engeller.
+/// - Zorunlu update mantığı: force true ise ve currentVersion < version ise kullanıcıyı engeller.
 class EasyUpdateGate extends StatefulWidget {
-  final String minimumVersion;
-  final bool forceUpdate;
+  final String version;
+  final bool force;
   final Widget child;
 
-  /// Android Play Store URL
-  final String? androidStoreUrl;
+  /// Play Store URL
+  final String? playStoreUrl;
 
-  /// iOS App Store URL
-  final String? iosStoreUrl;
+  /// App Store URL
+  final String? appStoreUrl;
 
   /// Güncelleme gerekli olduğunda dialog yerine döndürülecek widget.
   /// Örn: Tam ekran bir Scaffold.
-  /// VersionCheckStatus ile forceUpdate/storeUrl vb. bilgilere erişebilirsiniz.
+  /// VersionCheckStatus ile force/storeUrl vb. bilgilere erişebilirsiniz.
   final EasyUpdateBuilder? updateBuilder;
 
   const EasyUpdateGate({
     super.key,
-    this.minimumVersion = '0.0.0',
-    this.forceUpdate = false,
+    this.version = '0.0.0',
+    this.force = false,
     this.child = const SizedBox.shrink(),
-    this.androidStoreUrl,
-    this.iosStoreUrl,
+    this.playStoreUrl,
+    this.appStoreUrl,
     this.updateBuilder,
   });
 
@@ -53,10 +53,10 @@ class _EasyUpdateGateState extends State<EasyUpdateGate> {
 
   Future<void> _check() async {
     try {
-      // Service: minimumVersion ve forceUpdate parametreleri ile oluştur
+      // Service: version ve force parametreleri ile oluştur
       final service = VersionCheckService(
-        minimumVersion: widget.minimumVersion,
-        forceUpdate: widget.forceUpdate,
+        version: widget.version,
+        force: widget.force,
         storeUrl: _getStoreUrl(),
       );
 
@@ -78,10 +78,10 @@ class _EasyUpdateGateState extends State<EasyUpdateGate> {
   /// Platforma göre store URL döndür
   String _getStoreUrl() {
     if (Platform.isAndroid) {
-      return widget.androidStoreUrl ?? '';
+      return widget.playStoreUrl ?? '';
     }
     if (Platform.isIOS) {
-      return widget.iosStoreUrl ?? '';
+      return widget.appStoreUrl ?? '';
     }
     return '';
   }

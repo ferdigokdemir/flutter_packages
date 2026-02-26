@@ -16,10 +16,10 @@ import 'version_check_service.dart';
 /// ```dart
 /// // 1️⃣ Başlangıçta init et
 /// await EasyUpdate.instance.init(
-///   minimumVersion: RemoteConfig.instance.minimumVersion,
-///   forceUpdate: RemoteConfig.instance.forceUpdate,
-///   androidStoreUrl: 'https://play.google.com/store/apps/details?id=...',
-///   iosStoreUrl: 'https://apps.apple.com/app/...',
+///   version: '2.0.0',
+///   force: true,
+///   playStoreUrl: 'https://play.google.com/store/apps/details?id=...',
+///   appStoreUrl: 'https://apps.apple.com/app/...',
 /// );
 ///
 /// // 2️⃣ Status kontrol et
@@ -35,7 +35,7 @@ class EasyUpdate {
 
   late VersionCheckService _service;
   VersionCheckStatus? _lastStatus;
-  String _minimumVersion = '0.0.0';
+  String _version = '0.0.0';
   String _locale = 'en';
 
   EasyUpdate._internal();
@@ -59,37 +59,37 @@ class EasyUpdate {
   /// 🔧 Servisi initialize et
   ///
   /// RemoteConfig değerlerini iletilir.
-  /// [androidStoreUrl] - Play Store URL
-  /// [iosStoreUrl] - App Store URL
+  /// [playStoreUrl] - Play Store URL
+  /// [appStoreUrl] - App Store URL
   /// [locale] - Dil kodu: tr, en, es, pt, de (varsayılan: en)
   Future<void> init({
-    required String minimumVersion,
-    required bool forceUpdate,
-    String? androidStoreUrl,
-    String? iosStoreUrl,
+    required String version,
+    bool force = false,
+    String? playStoreUrl,
+    String? appStoreUrl,
     String locale = 'en',
   }) async {
-    _minimumVersion = minimumVersion;
+    _version = version;
     this.locale = locale;
 
     _service = VersionCheckService(
-      minimumVersion: minimumVersion,
-      forceUpdate: forceUpdate,
-      storeUrl: _getStoreUrl(androidStoreUrl, iosStoreUrl),
+      version: version,
+      force: force,
+      storeUrl: _getStoreUrl(playStoreUrl, appStoreUrl),
     );
 
     debugPrint(
-      '✅ [EasyUpdate] Initialized: v$minimumVersion (force: $forceUpdate, locale: $_locale)',
+      '✅ [EasyUpdate] Initialized: v$version (force: $force, locale: $_locale)',
     );
   }
 
   /// Platforma göre store URL döndür
-  String _getStoreUrl(String? androidStoreUrl, String? iosStoreUrl) {
+  String _getStoreUrl(String? playStoreUrl, String? appStoreUrl) {
     if (Platform.isAndroid) {
-      return androidStoreUrl ?? '';
+      return playStoreUrl ?? '';
     }
     if (Platform.isIOS) {
-      return iosStoreUrl ?? '';
+      return appStoreUrl ?? '';
     }
     return '';
   }
@@ -107,16 +107,16 @@ class EasyUpdate {
       _lastStatus = await _service.checkForUpdates();
 
       // Eğer kullanıcı bu versiyonu skip ettiyse, updateRequired = false yap
-      if (skippedVersion == _lastStatus!.minimumVersion) {
+      if (skippedVersion == _lastStatus!.version) {
         debugPrint(
           '⏭️ [EasyUpdate] Version $skippedVersion skipped by user, hiding dialog',
         );
         _lastStatus = VersionCheckStatus(
           updateRequired: false,
-          forceUpdate: false,
+          force: false,
           storeUrl: _lastStatus!.storeUrl,
           currentVersion: _lastStatus!.currentVersion,
-          minimumVersion: _lastStatus!.minimumVersion,
+          version: _lastStatus!.version,
         );
       }
 
@@ -126,10 +126,10 @@ class EasyUpdate {
       debugPrint('❌ [EasyUpdate] Check error: $e');
       return VersionCheckStatus(
         updateRequired: false,
-        forceUpdate: false,
+        force: false,
         storeUrl: '',
         currentVersion: '0.0.0',
-        minimumVersion: _minimumVersion,
+        version: _version,
       );
     }
   }
@@ -152,7 +152,7 @@ class EasyUpdate {
 
     await showDialog(
       context: context,
-      barrierDismissible: status.forceUpdate ? false : true,
+      barrierDismissible: status.force ? false : true,
       builder: (ctx) => _buildUpdateDialog(ctx, status),
     );
   }
@@ -162,11 +162,11 @@ class EasyUpdate {
     final l10n = EasyUpdateLocalizations.of(_locale);
 
     return PopScope(
-      canPop: !status.forceUpdate,
+      canPop: !status.force,
       child: AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(
-          status.forceUpdate ? l10n.updateRequired : l10n.updateAvailable,
+          status.force ? l10n.updateRequired : l10n.updateAvailable,
           textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: 20,
@@ -181,9 +181,7 @@ class EasyUpdate {
               const Icon(Icons.system_update, size: 48, color: Colors.blue),
               const SizedBox(height: 16),
               Text(
-                status.forceUpdate
-                    ? l10n.updateMessage
-                    : l10n.optionalUpdateMessage,
+                status.force ? l10n.updateMessage : l10n.optionalUpdateMessage,
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 16, color: Colors.black87),
               ),
@@ -199,17 +197,17 @@ class EasyUpdate {
                 child: Text(l10n.updateButton),
               ),
 
-              if (!status.forceUpdate)
+              if (!status.force)
                 TextButton(
                   onPressed: () async {
                     // Bu sürümü hatırlatma - SharedPreferences'e kaydet
                     final prefs = await SharedPreferences.getInstance();
                     await prefs.setString(
                       'easy_update_skipped_version',
-                      status.minimumVersion,
+                      status.version,
                     );
                     debugPrint(
-                      '✅ [EasyUpdate] Version ${status.minimumVersion} marked as skipped',
+                      '✅ [EasyUpdate] Version ${status.version} marked as skipped',
                     );
                     if (context.mounted) {
                       Navigator.of(context).pop();

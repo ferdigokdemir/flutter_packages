@@ -27,17 +27,17 @@ import '../models/version_check_status.dart';
 
 class VersionCheckService {
   /// Minimum gerekli versiyon
-  final String minimumVersion;
+  final String version;
 
   /// Güncelleme zorunlu mu?
-  final bool forceUpdate;
+  final bool force;
 
   /// App Store / Google Play URL'si
   final String storeUrl;
 
   VersionCheckService({
-    required this.minimumVersion,
-    required this.forceUpdate,
+    required this.version,
+    required this.force,
     required this.storeUrl,
   });
 
@@ -72,25 +72,25 @@ class VersionCheckService {
       // ⚖️ Sürüm karşılaştırması
       final updateRequired = _isUpdateRequired(
         currentVersion: currentVersion,
-        minimumVersion: minimumVersion,
+        version: version,
       );
 
       return VersionCheckStatus(
         updateRequired: updateRequired,
-        forceUpdate: updateRequired && forceUpdate,
+        force: updateRequired && force,
         storeUrl: storeUrl,
         currentVersion: currentVersion,
-        minimumVersion: minimumVersion,
+        version: version,
       );
     } catch (e) {
       debugPrint('❌ [EasyUpdate] Error: $e');
       // Hata durumunda güvenli davran
       return VersionCheckStatus(
         updateRequired: false,
-        forceUpdate: false,
+        force: false,
         storeUrl: '',
         currentVersion: '0.0.0',
-        minimumVersion: '0.0.0',
+        version: '0.0.0',
       );
     }
   }
@@ -109,11 +109,11 @@ class VersionCheckService {
   /// - `_isUpdateRequired("1.7.5", "1.7.8")` → true (patch daha eski)
   bool _isUpdateRequired({
     required String currentVersion,
-    required String minimumVersion,
+    required String version,
   }) {
     try {
       final current = _parseVersion(currentVersion);
-      final minimum = _parseVersion(minimumVersion);
+      final minimum = _parseVersion(version);
 
       // Major sürüm karşılaştırması
       if (current['major'] != minimum['major']) {

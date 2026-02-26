@@ -6,7 +6,7 @@ class VersionCheckStatus {
   final bool updateRequired;
 
   /// Güncelleme zorunlu mu? (false ise "Daha sonra" seçeneği var)
-  final bool forceUpdate;
+  final bool force;
 
   /// App Store / Google Play URL'si
   final String storeUrl;
@@ -15,22 +15,22 @@ class VersionCheckStatus {
   final String currentVersion;
 
   /// Minimum gerekli versiyon
-  final String minimumVersion;
+  final String version;
 
   VersionCheckStatus({
     required this.updateRequired,
-    required this.forceUpdate,
+    required this.force,
     required this.storeUrl,
     required this.currentVersion,
-    required this.minimumVersion,
+    required this.version,
   });
 
   @override
   String toString() =>
       '''VersionCheckStatus(
     updateRequired: $updateRequired,
-    forceUpdate: $forceUpdate,
+    force: $force,
     currentVersion: $currentVersion,
-    minimumVersion: $minimumVersion,
+    version: $version,
   )''';
 }
