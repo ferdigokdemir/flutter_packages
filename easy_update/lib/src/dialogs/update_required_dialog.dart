@@ -20,12 +20,17 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../l10n/easy_update_localizations.dart';
+
 class UpdateRequiredDialog extends StatefulWidget {
   /// Güncelleme zorunlu mu? (true ise "Daha sonra" butonu gösterilmez)
   final bool forceUpdate;
 
   /// App Store / Google Play URL'si
   final String storeUrl;
+
+  /// Dil kodu (tr, en, es, pt, de)
+  final String locale;
 
   /// Güncelle butonuna tıklandığında çağrılan callback
   final VoidCallback? onUpdate;
@@ -37,6 +42,7 @@ class UpdateRequiredDialog extends StatefulWidget {
     super.key,
     required this.forceUpdate,
     required this.storeUrl,
+    this.locale = 'en',
     this.onUpdate,
     this.onLater,
   });
@@ -81,6 +87,8 @@ class _UpdateRequiredDialogState extends State<UpdateRequiredDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = EasyUpdateLocalizations.of(widget.locale);
+
     return PopScope(
       canPop: !widget.forceUpdate,
       child: Dialog(
@@ -103,7 +111,7 @@ class _UpdateRequiredDialogState extends State<UpdateRequiredDialog> {
 
               // 📝 Başlık
               Text(
-                '🎉 Yeni Sürüm Mevcut!',
+                widget.forceUpdate ? l10n.updateRequired : l10n.updateAvailable,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
@@ -115,8 +123,8 @@ class _UpdateRequiredDialogState extends State<UpdateRequiredDialog> {
               // 📄 İçerik
               Text(
                 widget.forceUpdate
-                    ? 'Uygulamayı kullanmaya devam etmek için lütfen en yeni sürüme güncelleyin. ✨'
-                    : 'Yeni özellikler ve iyileştirmeler için güncelleyin! ✨',
+                    ? l10n.updateMessage
+                    : l10n.optionalUpdateMessage,
                 style: Theme.of(
                   context,
                 ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade700),
@@ -142,7 +150,7 @@ class _UpdateRequiredDialogState extends State<UpdateRequiredDialog> {
                         )
                       : const Icon(Icons.download),
                   label: Text(
-                    _isLoading ? 'Açılıyor...' : 'Şimdi Güncelle',
+                    l10n.updateButton,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -164,7 +172,7 @@ class _UpdateRequiredDialogState extends State<UpdateRequiredDialog> {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                     child: Text(
-                      'Daha Sonra',
+                      l10n.laterButton,
                       style: TextStyle(
                         color: Colors.grey.shade700,
                         fontWeight: FontWeight.bold,

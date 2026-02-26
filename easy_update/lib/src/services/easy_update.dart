@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../l10n/easy_update_localizations.dart';
 import '../models/version_check_status.dart';
 import 'version_check_service.dart';
 
@@ -31,20 +32,38 @@ class EasyUpdate {
   late VersionCheckService _service;
   VersionCheckStatus? _lastStatus;
   String _minimumVersion = '0.0.0';
+  String _locale = 'en';
 
   EasyUpdate._internal();
 
   static EasyUpdate get instance => _instance;
 
+  /// Mevcut locale
+  String get locale => _locale;
+
+  /// Locale'i değiştir
+  set locale(String value) {
+    if (EasyUpdateLocalizations.supportedLocales.contains(
+      value.toLowerCase(),
+    )) {
+      _locale = value.toLowerCase();
+    } else {
+      _locale = EasyUpdateLocalizations.defaultLocale;
+    }
+  }
+
   /// 🔧 Servisi initialize et
   ///
   /// RemoteConfig değerlerini iletilir.
+  /// [locale] - Dil kodu: tr, en, es, pt, de (varsayılan: en)
   Future<void> init({
     required String minimumVersion,
     required bool forceUpdate,
     required String storeUrl,
+    String locale = 'en',
   }) async {
     _minimumVersion = minimumVersion;
+    this.locale = locale;
 
     _service = VersionCheckService(
       minimumVersion: minimumVersion,
@@ -53,7 +72,7 @@ class EasyUpdate {
     );
 
     debugPrint(
-      '✅ [EasyUpdate] Initialized: v$minimumVersion (force: $forceUpdate)',
+      '✅ [EasyUpdate] Initialized: v$minimumVersion (force: $forceUpdate, locale: $_locale)',
     );
   }
 
@@ -122,14 +141,16 @@ class EasyUpdate {
 
   /// 🏗️ Update dialog widget'ını oluştur
   Widget _buildUpdateDialog(BuildContext context, VersionCheckStatus status) {
+    final l10n = EasyUpdateLocalizations.of(_locale);
+
     return PopScope(
       canPop: !status.forceUpdate,
       child: AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text(
-          'Yeni sürüm gerekli',
+        title: Text(
+          status.forceUpdate ? l10n.updateRequired : l10n.updateAvailable,
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Colors.black87,
@@ -141,10 +162,12 @@ class EasyUpdate {
             children: [
               const Icon(Icons.system_update, size: 48, color: Colors.blue),
               const SizedBox(height: 16),
-              const Text(
-                'Uygulamayı kullanmaya devam etmek için lütfen uygulamayı güncelleyin. 📝✨',
+              Text(
+                status.forceUpdate
+                    ? l10n.updateMessage
+                    : l10n.optionalUpdateMessage,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.black87),
+                style: const TextStyle(fontSize: 16, color: Colors.black87),
               ),
               const SizedBox(height: 10),
 
@@ -155,7 +178,7 @@ class EasyUpdate {
                     await launchUrl(url, mode: LaunchMode.externalApplication);
                   }
                 },
-                child: const Text('Uygulamayı Güncelle'),
+                child: Text(l10n.updateButton),
               ),
 
               if (!status.forceUpdate)
@@ -174,9 +197,9 @@ class EasyUpdate {
                       Navigator.of(context).pop();
                     }
                   },
-                  child: const Text(
-                    'Daha Sonra Hatırlat',
-                    style: TextStyle(color: Colors.black87),
+                  child: Text(
+                    l10n.laterButton,
+                    style: const TextStyle(color: Colors.black87),
                   ),
                 ),
             ],
