@@ -7,7 +7,7 @@
 // ```dart
 // await Get.dialog(
 //   UpdateRequiredDialog(
-//     forceUpdate: true,
+//     force: true,
 //     storeUrl: 'https://play.google.com/store/apps/details?id=...',
 //     onUpdate: () async {
 //       await launchUrl(Uri.parse(storeUrl));
@@ -24,7 +24,7 @@ import '../l10n/easy_update_localizations.dart';
 
 class UpdateRequiredDialog extends StatefulWidget {
   /// Güncelleme zorunlu mu? (true ise "Daha sonra" butonu gösterilmez)
-  final bool forceUpdate;
+  final bool force;
 
   /// App Store / Google Play URL'si
   final String storeUrl;
@@ -40,7 +40,7 @@ class UpdateRequiredDialog extends StatefulWidget {
 
   const UpdateRequiredDialog({
     super.key,
-    required this.forceUpdate,
+    required this.force,
     required this.storeUrl,
     this.locale = 'en',
     this.onUpdate,
@@ -90,7 +90,7 @@ class _UpdateRequiredDialogState extends State<UpdateRequiredDialog> {
     final l10n = EasyUpdateLocalizations.of(widget.locale);
 
     return PopScope(
-      canPop: !widget.forceUpdate,
+      canPop: !widget.force,
       child: Dialog(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -111,7 +111,7 @@ class _UpdateRequiredDialogState extends State<UpdateRequiredDialog> {
 
               // 📝 Başlık
               Text(
-                widget.forceUpdate ? l10n.updateRequired : l10n.updateAvailable,
+                widget.force ? l10n.updateRequired : l10n.updateAvailable,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
@@ -122,9 +122,7 @@ class _UpdateRequiredDialogState extends State<UpdateRequiredDialog> {
 
               // 📄 İçerik
               Text(
-                widget.forceUpdate
-                    ? l10n.updateMessage
-                    : l10n.optionalUpdateMessage,
+                widget.force ? l10n.updateMessage : l10n.optionalUpdateMessage,
                 style: Theme.of(
                   context,
                 ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade700),
@@ -163,7 +161,7 @@ class _UpdateRequiredDialogState extends State<UpdateRequiredDialog> {
               const SizedBox(height: 10),
 
               // Daha sonra butonu - Zorunlu değilse göster
-              if (!widget.forceUpdate)
+              if (!widget.force)
                 SizedBox(
                   width: double.infinity,
                   child: TextButton(
