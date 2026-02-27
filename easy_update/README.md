@@ -17,7 +17,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  easy_update: ^1.0.0
+  easy_update: ^1.0.3
 ```
 
 ## 🚀 Usage
