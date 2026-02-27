@@ -1,9 +1,9 @@
 name: easy_update
 description: "Remote Config based Flutter app version control package. Provides ready-to-use dialogs and services for mandatory and optional updates with 47 language support."
 version: 1.0.0
-homepage: https://github.com/ArcaneArts/flutter_packages/tree/main/easy_update
-repository: https://github.com/ArcaneArts/flutter_packages
-issue_tracker: https://github.com/ArcaneArts/flutter_packages/issues
+homepage: https://github.com/ferdigokdemir/flutter_packages/tree/main/easy_update
+repository: https://github.com/ferdigokdemir/flutter_packages
+issue_tracker: https://github.com/ferdigokdemir/flutter_packages/issues
 topics:
   - update
   - version

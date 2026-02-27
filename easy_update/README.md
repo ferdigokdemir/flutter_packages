@@ -1,50 +1,49 @@
 # 📦 Easy Update
 
-Remote Config tabanlı Flutter uygulama sürüm kontrol paketi. Zorunlu ve isteğe bağlı güncellemeler için hazır dialog ve service sağlar.
+A Remote Config based Flutter app version control package. Provides ready-to-use dialogs and services for mandatory and optional updates.
 
-## ✨ Özellikler
+## ✨ Features
 
-- ✅ **Semantic Versioning** - Doğru sürüm karşılaştırması (major.minor.patch)
-- ✅ **Zorunlu Güncelleme** - Kullanıcıyı zorla güncellemeye yönlendir
-- ✅ **İsteğe Bağlı Güncelleme** - "Daha sonra" seçeneği sunan dialog
-- ✅ **Sürüm Atlama** - Kullanıcı belirli bir sürümü atlayabilir
-- ✅ **47 Dil Desteği** - Çoklu dil desteği built-in
-- ✅ **Platform Aware** - iOS/Android store URL'leri otomatik
+- ✅ **Semantic Versioning** - Correct version comparison (major.minor.patch)
+- ✅ **Force Update** - Force users to update the app
+- ✅ **Optional Update** - Dialog with "Later" option
+- ✅ **Skip Version** - Users can skip a specific version
+- ✅ **47 Languages** - Built-in multi-language support
+- ✅ **Platform Aware** - Automatic iOS/Android store URLs
 
-## 📋 Kurulum
+## 📋 Installation
 
-`pubspec.yaml` dosyasına ekle:
+Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  easy_update:
-    path: packages/easy_update
+  easy_update: ^1.0.0
 ```
 
-## 🚀 Kullanım
+## 🚀 Usage
 
-### Temel Kullanım (Singleton)
+### Basic Usage (Singleton)
 
 ```dart
 import 'package:easy_update/easy_update.dart';
 
-// 1️⃣ App başlangıcında init et
+// 1️⃣ Initialize at app startup
 await EasyUpdate.instance.init(
   android: EasyUpdatePlatformConfig(
     version: remoteConfig.getString('MIN_VERSION_ANDROID'),
     storeUrl: 'https://play.google.com/store/apps/details?id=...',
     force: remoteConfig.getBool('FORCE_UPDATE_ANDROID'),
-    locale: 'tr',
+    locale: 'en',
   ),
   ios: EasyUpdatePlatformConfig(
     version: remoteConfig.getString('MIN_VERSION_IOS'),
     storeUrl: 'https://apps.apple.com/app/...',
     force: remoteConfig.getBool('FORCE_UPDATE_IOS'),
-    locale: 'tr',
+    locale: 'en',
   ),
 );
 
-// 2️⃣ Kontrol et ve dialog göster
+// 2️⃣ Check and show dialog
 final status = await EasyUpdate.instance.check();
 
 if (status.updateRequired) {
@@ -52,7 +51,7 @@ if (status.updateRequired) {
 }
 ```
 
-### Widget Kullanımı (EasyUpdateGate)
+### Widget Usage (EasyUpdateGate)
 
 ```dart
 import 'package:easy_update/easy_update.dart';
@@ -65,7 +64,7 @@ class MyApp extends StatelessWidget {
         version: '2.0.0',
         storeUrl: 'https://play.google.com/store/apps/details?id=...',
         force: true,
-        locale: 'tr',
+        locale: 'en',
       ),
       ios: EasyUpdatePlatformConfig(
         version: '2.1.0',
@@ -74,14 +73,14 @@ class MyApp extends StatelessWidget {
         locale: 'en',
       ),
       child: MaterialApp(...),
-      // Opsiyonel: Kendi güncelleme ekranınızı oluşturun
+      // Optional: Create your own update screen
       updateBuilder: (context, status) => CustomUpdateScreen(status: status),
     );
   }
 }
 ```
 
-### Direkt Dialog Kullanımı
+### Direct Dialog Usage
 
 ```dart
 import 'package:easy_update/easy_update.dart';
@@ -92,34 +91,34 @@ showDialog(
   builder: (_) => UpdateRequiredDialog(
     force: true,
     storeUrl: 'https://play.google.com/store/apps/details?id=...',
-    locale: 'tr',
-    onUpdate: () => print('Store açılıyor...'),
-    onLater: () => print('Kullanıcı erteledi'),
+    locale: 'en',
+    onUpdate: () => print('Opening store...'),
+    onLater: () => print('User postponed'),
   ),
 );
 ```
 
-## 🔧 Remote Config Parametreleri
+## 🔧 Remote Config Parameters
 
-Firebase Console veya kendi backend'inizde şu parametreleri tanımlayın:
+Define these parameters in Firebase Console or your own backend:
 
-| Parametre | Tip | Örnek | Açıklama |
-|-----------|-----|-------|----------|
-| `MIN_VERSION_ANDROID` | String | `"2.0.0"` | Android minimum versiyon |
-| `MIN_VERSION_IOS` | String | `"2.1.0"` | iOS minimum versiyon |
-| `FORCE_UPDATE_ANDROID` | Bool | `true` | Android zorunlu güncelleme mi? |
-| `FORCE_UPDATE_IOS` | Bool | `false` | iOS zorunlu güncelleme mi? |
-| `STORE_URL_ANDROID` | String | `"https://play.google.com/..."` | Play Store linki |
-| `STORE_URL_IOS` | String | `"https://apps.apple.com/..."` | App Store linki |
+| Parameter | Type | Example | Description |
+|-----------|------|---------|-------------|
+| `MIN_VERSION_ANDROID` | String | `"2.0.0"` | Android minimum version |
+| `MIN_VERSION_IOS` | String | `"2.1.0"` | iOS minimum version |
+| `FORCE_UPDATE_ANDROID` | Bool | `true` | Is Android update mandatory? |
+| `FORCE_UPDATE_IOS` | Bool | `false` | Is iOS update mandatory? |
+| `STORE_URL_ANDROID` | String | `"https://play.google.com/..."` | Play Store link |
+| `STORE_URL_IOS` | String | `"https://apps.apple.com/..."` | App Store link |
 
 ## 🎯 EasyUpdatePlatformConfig
 
 ```dart
 class EasyUpdatePlatformConfig {
-  final String version;    // Minimum gerekli versiyon
+  final String version;    // Minimum required version
   final String storeUrl;   // Store URL
-  final bool force;        // Zorunlu güncelleme mi? (varsayılan: false)
-  final String locale;     // Dialog dili (varsayılan: 'en')
+  final bool force;        // Is update mandatory? (default: false)
+  final String locale;     // Dialog language (default: 'en')
 
   const EasyUpdatePlatformConfig({
     required this.version,
@@ -134,18 +133,18 @@ class EasyUpdatePlatformConfig {
 
 ```dart
 class VersionCheckStatus {
-  final bool updateRequired;    // Güncelleme gerekli mi?
-  final bool force;             // Zorunlu mu? (true = "Daha sonra" yok)
-  final String storeUrl;        // Store linki
-  final String currentVersion;  // Mevcut versiyon (ör: "1.8.0")
-  final String version;         // Gerekli minimum (ör: "2.0.0")
+  final bool updateRequired;    // Is update required?
+  final bool force;             // Is it mandatory? (true = no "Later" button)
+  final String storeUrl;        // Store link
+  final String currentVersion;  // Current version (e.g., "1.8.0")
+  final String version;         // Required minimum (e.g., "2.0.0")
 }
 ```
 
-## 🌍 Desteklenen Diller (47)
+## 🌍 Supported Languages (47)
 
-| Kod | Dil | Kod | Dil | Kod | Dil |
-|-----|-----|-----|-----|-----|-----|
+| Code | Language | Code | Language | Code | Language |
+|------|----------|------|----------|------|----------|
 | `al` | Albanian | `hu` | Hungarian | `pt` | Portuguese |
 | `ar` | Arabic | `hi` | Hindi | `ro` | Romanian |
 | `bn` | Bangla | `id` | Indonesian | `ru` | Russian |
@@ -164,47 +163,47 @@ class VersionCheckStatus {
 | `fr` | French | `de` | German | | |
 | `el` | Greek | `he` | Hebrew | | |
 
-### Dil Kullanımı
+### Language Usage
 
 ```dart
-// Singleton ile - her platform için farklı dil
+// Singleton - different language per platform
 await EasyUpdate.instance.init(
   android: EasyUpdatePlatformConfig(
     version: '2.0.0',
     storeUrl: '...',
     force: true,
-    locale: 'ja', // Japonca
+    locale: 'ja', // Japanese
   ),
   ios: EasyUpdatePlatformConfig(
     version: '2.1.0',
     storeUrl: '...',
     force: false,
-    locale: 'en', // İngilizce
+    locale: 'en', // English
   ),
 );
 
-// Dialog ile
+// With dialog
 UpdateRequiredDialog(
   force: true,
   storeUrl: '...',
-  locale: 'ko', // Korece
+  locale: 'ko', // Korean
 );
 
-// Direkt localization erişimi
+// Direct localization access
 final l10n = EasyUpdateLocalizations.of('de');
 print(l10n.updateButton); // "Aktualisieren"
 ```
 
-## 🔄 Akış Diyagramı
+## 🔄 Flow Diagram
 
 ```
 ┌─────────────────────────────────────────┐
-│            APP BAŞLANGIÇ                │
+│              APP STARTUP                │
 └─────────────────────────────────────────┘
                     │
                     ▼
 ┌─────────────────────────────────────────┐
-│  Remote Config'den değerleri al:        │
+│  Get values from Remote Config:         │
 │  • MIN_VERSION: "2.0.0"                 │
 │  • FORCE_UPDATE: true/false             │
 └─────────────────────────────────────────┘
@@ -214,26 +213,26 @@ print(l10n.updateButton); // "Aktualisieren"
 │  currentVersion < MIN_VERSION ?         │
 └─────────────────────────────────────────┘
           │                    │
-        HAYIR                EVET
+         NO                   YES
           │                    │
           ▼                    ▼
    ┌────────────┐    ┌─────────────────────┐
-   │ Devam et   │    │ FORCE_UPDATE == true?│
+   │ Continue   │    │ FORCE_UPDATE == true?│
    └────────────┘    └─────────────────────┘
                            │           │
-                         EVET        HAYIR
+                         YES          NO
                            │           │
                            ▼           ▼
                    ┌───────────┐ ┌─────────────┐
-                   │ ZORUNLU   │ │ OPSİYONEL   │
+                   │ MANDATORY │ │ OPTIONAL    │
                    │ DIALOG    │ │ DIALOG      │
                    │           │ │             │
-                   │ [Güncelle]│ │ [Güncelle]  │
-                   │           │ │ [Daha Sonra]│
+                   │ [Update]  │ │ [Update]    │
+                   │           │ │ [Later]     │
                    └───────────┘ └─────────────┘
 ```
 
-## 📝 Örnek: TabsPage'de Kontrol
+## 📝 Example: Check in TabsPage
 
 ```dart
 class TabsController extends GetxController {
@@ -259,4 +258,4 @@ class TabsController extends GetxController {
 
 ## 📄 License
 
-MIT License - Detaylar için [LICENSE](LICENSE) dosyasına bakın.
+MIT License - See [LICENSE](LICENSE) file for details.
