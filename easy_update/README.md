@@ -30,15 +30,15 @@ import 'package:easy_update/easy_update.dart';
 // 1️⃣ Initialize at app startup
 await EasyUpdate.instance.init(
   android: EasyUpdatePlatformConfig(
-    version: remoteConfig.getString('MIN_VERSION_ANDROID'),
-    storeUrl: 'https://play.google.com/store/apps/details?id=...',
-    force: remoteConfig.getBool('FORCE_UPDATE_ANDROID'),
+    version: '2.0.0',
+    storeUrl: 'https://play.google.com/store/apps/details?id=com.example.app',
+    force: false,
     locale: 'en',
   ),
   ios: EasyUpdatePlatformConfig(
-    version: remoteConfig.getString('MIN_VERSION_IOS'),
-    storeUrl: 'https://apps.apple.com/app/...',
-    force: remoteConfig.getBool('FORCE_UPDATE_IOS'),
+    version: '2.0.0',
+    storeUrl: 'https://apps.apple.com/app/id123456789',
+    force: false,
     locale: 'en',
   ),
 );
@@ -48,35 +48,6 @@ final status = await EasyUpdate.instance.check();
 
 if (status.updateRequired) {
   await EasyUpdate.instance.showUpdateDialog(context);
-}
-```
-
-### Widget Usage (EasyUpdateGate)
-
-```dart
-import 'package:easy_update/easy_update.dart';
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return EasyUpdateGate(
-      android: EasyUpdatePlatformConfig(
-        version: '2.0.0',
-        storeUrl: 'https://play.google.com/store/apps/details?id=...',
-        force: true,
-        locale: 'en',
-      ),
-      ios: EasyUpdatePlatformConfig(
-        version: '2.1.0',
-        storeUrl: 'https://apps.apple.com/app/...',
-        force: false,
-        locale: 'en',
-      ),
-      child: MaterialApp(...),
-      // Optional: Create your own update screen
-      updateBuilder: (context, status) => CustomUpdateScreen(status: status),
-    );
-  }
 }
 ```
 
@@ -90,26 +61,13 @@ showDialog(
   barrierDismissible: false,
   builder: (_) => UpdateRequiredDialog(
     force: true,
-    storeUrl: 'https://play.google.com/store/apps/details?id=...',
+    storeUrl: 'https://play.google.com/store/apps/details?id=com.example.app',
     locale: 'en',
     onUpdate: () => print('Opening store...'),
     onLater: () => print('User postponed'),
   ),
 );
 ```
-
-## 🔧 Remote Config Parameters
-
-Define these parameters in Firebase Console or your own backend:
-
-| Parameter | Type | Example | Description |
-|-----------|------|---------|-------------|
-| `MIN_VERSION_ANDROID` | String | `"2.0.0"` | Android minimum version |
-| `MIN_VERSION_IOS` | String | `"2.1.0"` | iOS minimum version |
-| `FORCE_UPDATE_ANDROID` | Bool | `true` | Is Android update mandatory? |
-| `FORCE_UPDATE_IOS` | Bool | `false` | Is iOS update mandatory? |
-| `STORE_URL_ANDROID` | String | `"https://play.google.com/..."` | Play Store link |
-| `STORE_URL_IOS` | String | `"https://apps.apple.com/..."` | App Store link |
 
 ## 🎯 EasyUpdatePlatformConfig
 
@@ -194,45 +152,7 @@ final l10n = EasyUpdateLocalizations.of('de');
 print(l10n.updateButton); // "Aktualisieren"
 ```
 
-## 🔄 Flow Diagram
-
-```
-┌─────────────────────────────────────────┐
-│              APP STARTUP                │
-└─────────────────────────────────────────┘
-                    │
-                    ▼
-┌─────────────────────────────────────────┐
-│  Get values from Remote Config:         │
-│  • MIN_VERSION: "2.0.0"                 │
-│  • FORCE_UPDATE: true/false             │
-└─────────────────────────────────────────┘
-                    │
-                    ▼
-┌─────────────────────────────────────────┐
-│  currentVersion < MIN_VERSION ?         │
-└─────────────────────────────────────────┘
-          │                    │
-         NO                   YES
-          │                    │
-          ▼                    ▼
-   ┌────────────┐    ┌─────────────────────┐
-   │ Continue   │    │ FORCE_UPDATE == true?│
-   └────────────┘    └─────────────────────┘
-                           │           │
-                         YES          NO
-                           │           │
-                           ▼           ▼
-                   ┌───────────┐ ┌─────────────┐
-                   │ MANDATORY │ │ OPTIONAL    │
-                   │ DIALOG    │ │ DIALOG      │
-                   │           │ │             │
-                   │ [Update]  │ │ [Update]    │
-                   │           │ │ [Later]     │
-                   └───────────┘ └─────────────┘
-```
-
-## 📝 Example: Check in TabsPage
+##  Example: Check in TabsPage
 
 ```dart
 class TabsController extends GetxController {

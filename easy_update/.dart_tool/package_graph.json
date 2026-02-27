@@ -5,7 +5,7 @@
   "packages": [
     {
       "name": "easy_update",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "dependencies": [
         "flutter",
         "package_info_plus",
