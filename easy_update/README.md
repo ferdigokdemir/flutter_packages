@@ -51,54 +51,6 @@ if (status.updateRequired) {
 }
 ```
 
-### Direct Dialog Usage
-
-```dart
-import 'package:easy_update/easy_update.dart';
-
-showDialog(
-  context: context,
-  barrierDismissible: false,
-  builder: (_) => UpdateRequiredDialog(
-    force: true,
-    storeUrl: 'https://play.google.com/store/apps/details?id=com.example.app',
-    locale: 'en',
-    onUpdate: () => print('Opening store...'),
-    onLater: () => print('User postponed'),
-  ),
-);
-```
-
-## 🎯 EasyUpdatePlatformConfig
-
-```dart
-class EasyUpdatePlatformConfig {
-  final String version;    // Minimum required version
-  final String storeUrl;   // Store URL
-  final bool force;        // Is update mandatory? (default: false)
-  final String locale;     // Dialog language (default: 'en')
-
-  const EasyUpdatePlatformConfig({
-    required this.version,
-    required this.storeUrl,
-    this.force = false,
-    this.locale = 'en',
-  });
-}
-```
-
-## 📊 VersionCheckStatus
-
-```dart
-class VersionCheckStatus {
-  final bool updateRequired;    // Is update required?
-  final bool force;             // Is it mandatory? (true = no "Later" button)
-  final String storeUrl;        // Store link
-  final String currentVersion;  // Current version (e.g., "1.8.0")
-  final String version;         // Required minimum (e.g., "2.0.0")
-}
-```
-
 ## 🌍 Supported Languages (47)
 
 | Code | Language | Code | Language | Code | Language |
@@ -120,37 +72,6 @@ class VersionCheckStatus {
 | `fa` | Farsi | `ka` | Georgian | | |
 | `fr` | French | `de` | German | | |
 | `el` | Greek | `he` | Hebrew | | |
-
-### Language Usage
-
-```dart
-// Singleton - different language per platform
-await EasyUpdate.instance.init(
-  android: EasyUpdatePlatformConfig(
-    version: '2.0.0',
-    storeUrl: '...',
-    force: true,
-    locale: 'ja', // Japanese
-  ),
-  ios: EasyUpdatePlatformConfig(
-    version: '2.1.0',
-    storeUrl: '...',
-    force: false,
-    locale: 'en', // English
-  ),
-);
-
-// With dialog
-UpdateRequiredDialog(
-  force: true,
-  storeUrl: '...',
-  locale: 'ko', // Korean
-);
-
-// Direct localization access
-final l10n = EasyUpdateLocalizations.of('de');
-print(l10n.updateButton); // "Aktualisieren"
-```
 
 ##  Example: Check in TabsPage
 
