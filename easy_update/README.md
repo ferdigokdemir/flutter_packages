@@ -17,7 +17,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  easy_update: ^1.2.0
+  easy_update: ^1.2.1
 ```
 
 ## 🚀 Usage
@@ -44,38 +44,6 @@ await EasyUpdate.instance.run(
     locale: 'en',
   ),
 );
-```
-
-### Advanced Usage — Manual Steps
-
-Use this when you need to inspect the status before showing the dialog.
-
-```dart
-import 'package:easy_update/easy_update.dart';
-
-// 1️⃣ Initialize
-await EasyUpdate.instance.init(
-  android: EasyUpdatePlatformConfig(
-    version: '2.0.0',
-    storeUrl: 'https://play.google.com/store/apps/details?id=com.example.app',
-    force: false,
-    locale: 'en',
-  ),
-  ios: EasyUpdatePlatformConfig(
-    version: '2.0.0',
-    storeUrl: 'https://apps.apple.com/app/id123456789',
-    force: false,
-    locale: 'en',
-  ),
-);
-
-// 2️⃣ Check
-final status = await EasyUpdate.instance.check();
-
-// 3️⃣ Show dialog
-if (status.updateRequired) {
-  await EasyUpdate.instance.showUpdateDialog(context);
-}
 ```
 
 ## 🌍 Supported Languages (47)
@@ -118,15 +86,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _checkUpdate() async {
-    try {
-      final status = await EasyUpdate.instance.check();
-
-      if (status.updateRequired && mounted) {
-        await EasyUpdate.instance.showUpdateDialog(context);
-      }
-    } catch (e) {
-      debugPrint('Version check error: $e');
-    }
+    await EasyUpdate.instance.run(
+      context,
+      android: EasyUpdatePlatformConfig(
+        version: '2.0.0',
+        storeUrl: 'https://play.google.com/store/apps/details?id=com.example.app',
+        force: true,
+        locale: 'en',
+      ),
+      ios: EasyUpdatePlatformConfig(
+        version: '2.0.0',
+        storeUrl: 'https://apps.apple.com/app/id123456789',
+        force: true,
+        locale: 'en',
+      ),
+    );
   }
 
   @override
