@@ -5,11 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-04-30
+
+### Added
+
+- `EasyUpdateWidget` — drop-in widget for `MaterialApp`'s `builder` parameter
+- Automatic version check on first frame after app launch
+- `navigatorKey` based dialog presentation (no `BuildContext` required)
+- `delayMilliseconds` parameter to delay the version check
+- `onException` callback for error handling in `EasyUpdateWidget`
+
 ## [1.0.2] - 2026-02-27
-
-### Removed
-
-- Removed `EasyUpdateGate` widget (use `EasyUpdate.instance` singleton instead)
 
 ## [1.0.1] - 2026-02-27
 
@@ -25,7 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release
 - `EasyUpdate` singleton for easy initialization and version checking
-- `EasyUpdateGate` widget for declarative update blocking
 - `UpdateRequiredDialog` for customizable update dialogs
 - `VersionCheckService` for semantic version comparison
 - Support for 47 languages with built-in localizations

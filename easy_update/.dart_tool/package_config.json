@@ -15,7 +15,7 @@
     },
     {
       "name": "characters",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/characters-1.4.0",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/characters-1.4.1",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
@@ -53,7 +53,7 @@
       "name": "flutter",
       "rootUri": "file:///Users/ferdigokdemir/Desktop/flutter/packages/flutter",
       "packageUri": "lib/",
-      "languageVersion": "3.8"
+      "languageVersion": "3.9"
     },
     {
       "name": "flutter_lints",
@@ -65,13 +65,13 @@
       "name": "flutter_test",
       "rootUri": "file:///Users/ferdigokdemir/Desktop/flutter/packages/flutter_test",
       "packageUri": "lib/",
-      "languageVersion": "3.8"
+      "languageVersion": "3.9"
     },
     {
       "name": "flutter_web_plugins",
       "rootUri": "file:///Users/ferdigokdemir/Desktop/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
-      "languageVersion": "3.8"
+      "languageVersion": "3.9"
     },
     {
       "name": "http",
@@ -111,15 +111,15 @@
     },
     {
       "name": "matcher",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/matcher-0.12.17",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/matcher-0.12.19",
       "packageUri": "lib/",
-      "languageVersion": "3.4"
+      "languageVersion": "3.7"
     },
     {
       "name": "material_color_utilities",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/material_color_utilities-0.11.1",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/material_color_utilities-0.13.0",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.5"
     },
     {
       "name": "meta",
@@ -221,7 +221,7 @@
       "name": "sky_engine",
       "rootUri": "file:///Users/ferdigokdemir/Desktop/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
-      "languageVersion": "3.8"
+      "languageVersion": "3.9"
     },
     {
       "name": "source_span",
@@ -255,9 +255,9 @@
     },
     {
       "name": "test_api",
-      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/test_api-0.7.7",
+      "rootUri": "file:///Users/ferdigokdemir/.pub-cache/hosted/pub.dev/test_api-0.7.10",
       "packageUri": "lib/",
-      "languageVersion": "3.5"
+      "languageVersion": "3.7"
     },
     {
       "name": "typed_data",
@@ -351,8 +351,8 @@
     }
   ],
   "generator": "pub",
-  "generatorVersion": "3.10.8",
+  "generatorVersion": "3.11.5",
   "flutterRoot": "file:///Users/ferdigokdemir/Desktop/flutter",
-  "flutterVersion": "3.38.9",
+  "flutterVersion": "3.41.7",
   "pubCache": "file:///Users/ferdigokdemir/.pub-cache"
 }
