@@ -162,6 +162,40 @@ class EasyUpdate {
   /// 📱 Son status'u getir (cache'den)
   VersionCheckStatus? getLastStatus() => _lastStatus;
 
+  /// ⚡ Tek adımda versiyon kontrolü yap ve gerekirse dialog göster.
+  ///
+  /// `init`, `check` ve `showUpdateDialog` adımlarını tek metotta birleştirir.
+  ///
+  /// **Kullanım:**
+  /// ```dart
+  /// await EasyUpdate.instance.run(
+  ///   context,
+  ///   android: EasyUpdatePlatformConfig(
+  ///     version: '2.0.0',
+  ///     storeUrl: 'https://play.google.com/store/apps/details?id=...',
+  ///     force: true,
+  ///     locale: 'tr',
+  ///   ),
+  ///   ios: EasyUpdatePlatformConfig(
+  ///     version: '2.0.0',
+  ///     storeUrl: 'https://apps.apple.com/app/id123456789',
+  ///     force: true,
+  ///     locale: 'tr',
+  ///   ),
+  /// );
+  /// ```
+  Future<void> run(
+    BuildContext context, {
+    EasyUpdatePlatformConfig? android,
+    EasyUpdatePlatformConfig? ios,
+  }) async {
+    await init(android: android, ios: ios);
+    final status = await check();
+    if (status.updateRequired && context.mounted) {
+      await showUpdateDialog(context);
+    }
+  }
+
   ///  Update dialog'unu göster
   ///
   /// Status'a göre zorunlu/opsiyonel update dialog'u gösterir.

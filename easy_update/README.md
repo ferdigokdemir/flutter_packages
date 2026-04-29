@@ -17,17 +17,43 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  easy_update: ^1.1.1
+  easy_update: ^1.2.0
 ```
 
 ## 🚀 Usage
 
-### Basic Usage (Singleton)
+### Simple Usage — `run()`
+
+One call does everything: initializes, checks the version, and shows the dialog if needed.
 
 ```dart
 import 'package:easy_update/easy_update.dart';
 
-// 1️⃣ Initialize at app startup
+await EasyUpdate.instance.run(
+  context,
+  android: EasyUpdatePlatformConfig(
+    version: '2.0.0',
+    storeUrl: 'https://play.google.com/store/apps/details?id=com.example.app',
+    force: true,
+    locale: 'en',
+  ),
+  ios: EasyUpdatePlatformConfig(
+    version: '2.0.0',
+    storeUrl: 'https://apps.apple.com/app/id123456789',
+    force: true,
+    locale: 'en',
+  ),
+);
+```
+
+### Advanced Usage — Manual Steps
+
+Use this when you need to inspect the status before showing the dialog.
+
+```dart
+import 'package:easy_update/easy_update.dart';
+
+// 1️⃣ Initialize
 await EasyUpdate.instance.init(
   android: EasyUpdatePlatformConfig(
     version: '2.0.0',
@@ -43,9 +69,10 @@ await EasyUpdate.instance.init(
   ),
 );
 
-// 2️⃣ Check and show dialog
+// 2️⃣ Check
 final status = await EasyUpdate.instance.check();
 
+// 3️⃣ Show dialog
 if (status.updateRequired) {
   await EasyUpdate.instance.showUpdateDialog(context);
 }
@@ -73,7 +100,7 @@ if (status.updateRequired) {
 | `fr` | French | `de` | German | | |
 | `el` | Greek | `he` | Hebrew | | |
 
-## 💡 Example: Check on Home Screen
+## 💡 Example: `run()` in Home Screen
 
 ```dart
 class HomeScreen extends StatefulWidget {
