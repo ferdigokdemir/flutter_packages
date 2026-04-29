@@ -73,26 +73,40 @@ if (status.updateRequired) {
 | `fr` | French | `de` | German | | |
 | `el` | Greek | `he` | Hebrew | | |
 
-##  Example: Check in TabsPage
+## 💡 Example: Check on Home Screen
 
 ```dart
-class TabsController extends GetxController {
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
-  void onInit() {
-    super.onInit();
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => _checkUpdate());
   }
 
   Future<void> _checkUpdate() async {
     try {
       final status = await EasyUpdate.instance.check();
-      
-      if (status.updateRequired) {
-        await EasyUpdate.instance.showUpdateDialog(Get.context!);
+
+      if (status.updateRequired && mounted) {
+        await EasyUpdate.instance.showUpdateDialog(context);
       }
     } catch (e) {
       debugPrint('Version check error: $e');
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(child: Text('Home')),
+    );
   }
 }
 ```
