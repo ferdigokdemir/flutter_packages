@@ -15,7 +15,10 @@ import '../services/easy_update.dart';
 /// Renkler parametre ile özelleştirilebilir.
 class UpdateBanner extends StatelessWidget {
   final VersionCheckStatus status;
-  final Color backgroundColor;
+
+  /// Arka plan rengi. Verilmezse [VersionCheckStatus.force]'a göre seçilir:
+  /// zorunlu güncelleme → [Colors.pinkAccent] (aciliyet), opsiyonel → amber.
+  final Color? backgroundColor;
   final Color foregroundColor;
   final Color actionBackgroundColor;
   final Color actionForegroundColor;
@@ -23,7 +26,7 @@ class UpdateBanner extends StatelessWidget {
   const UpdateBanner({
     super.key,
     required this.status,
-    this.backgroundColor = Colors.pinkAccent,
+    this.backgroundColor,
     this.foregroundColor = Colors.black87,
     this.actionBackgroundColor = Colors.black87,
     this.actionForegroundColor = Colors.white,
@@ -39,9 +42,11 @@ class UpdateBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = EasyUpdateLocalizations.of(EasyUpdate.instance.locale);
+    final bg =
+        backgroundColor ?? (status.force ? Colors.pinkAccent : Colors.amber);
 
     return Material(
-      color: backgroundColor,
+      color: bg,
       child: InkWell(
         onTap: _openStore,
         child: Padding(

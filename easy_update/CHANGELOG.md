@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2026-06-21
+
+### Changed
+
+- `UpdateBanner.backgroundColor` is now optional; when omitted the color reflects urgency — `pinkAccent` for mandatory updates (`status.force == true`), `amber` for optional ones. Pass an explicit color to override.
+
 ## [1.3.0] - 2026-06-21
 
 ### Added
