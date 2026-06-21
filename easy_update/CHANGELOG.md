@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-06-21
+
+### Added
+
+- `UpdateBanner` — thin, non-dismissable inline update banner widget (icon + message + update action). Message switches on `status.force`; colors are customizable via constructor params. Tapping the strip or action opens the store URL.
+- `EasyUpdateLocalizations.bannerMessage` — short, action-oriented message for optional-update banners ("Update the app to discover new features!").
+- `EasyUpdateLocalizations.bannerForceMessage` — message for mandatory-update banners ("This version is no longer supported."). Both keys localized for `en`, `de`, `es`, `id`, `it`, `pt`, `tr`; other locales fall back to English.
+
 ## [1.2.1] - 2026-04-30
 
 ### Changed

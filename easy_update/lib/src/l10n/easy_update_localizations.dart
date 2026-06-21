@@ -590,6 +590,24 @@ class EasyUpdateLocalizations {
       'uk': 'Нова Версія',
       'vi': 'Phiên Bản Mới',
     },
+    'bannerMessage': {
+      'en': 'Update the app to discover new features!',
+      'de': 'Aktualisiere die App, um neue Funktionen zu entdecken!',
+      'es': '¡Actualiza la app para descubrir nuevas funciones!',
+      'id': 'Perbarui aplikasi untuk menemukan fitur baru!',
+      'it': 'Aggiorna l\'app per scoprire le nuove funzionalità!',
+      'pt': 'Atualize o app para descobrir novos recursos!',
+      'tr': 'Yeni özellikleri görmek için uygulamayı güncelle!',
+    },
+    'bannerForceMessage': {
+      'en': 'This version is no longer supported.',
+      'de': 'Diese Version wird nicht mehr unterstützt.',
+      'es': 'Esta versión ya no es compatible.',
+      'id': 'Versi ini tidak lagi didukung.',
+      'it': 'Questa versione non è più supportata.',
+      'pt': 'Esta versão não é mais suportada.',
+      'tr': 'Bu sürüm artık desteklenmiyor.',
+    },
   };
 
   /// Çeviri al - bulunamazsa İngilizce döner
@@ -630,4 +648,10 @@ class EasyUpdateLocalizations {
 
   /// "Yeni Sürüm"
   String get newVersion => _get('newVersion');
+
+  /// İnce güncelleme banner'ı mesajı (opsiyonel güncelleme)
+  String get bannerMessage => _get('bannerMessage');
+
+  /// İnce güncelleme banner'ı mesajı (zorunlu güncelleme)
+  String get bannerForceMessage => _get('bannerForceMessage');
 }
