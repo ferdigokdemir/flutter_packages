@@ -23,6 +23,9 @@ class UpdateBanner extends StatelessWidget {
   final Color actionBackgroundColor;
   final Color actionForegroundColor;
 
+  /// Banner köşe yuvarlaklığı. Varsayılan sıfır (köşesiz tam genişlik şerit).
+  final BorderRadiusGeometry borderRadius;
+
   const UpdateBanner({
     super.key,
     required this.status,
@@ -30,6 +33,7 @@ class UpdateBanner extends StatelessWidget {
     this.foregroundColor = Colors.black87,
     this.actionBackgroundColor = Colors.black87,
     this.actionForegroundColor = Colors.white,
+    this.borderRadius = BorderRadius.zero,
   });
 
   Future<void> _openStore() async {
@@ -47,6 +51,8 @@ class UpdateBanner extends StatelessWidget {
 
     return Material(
       color: bg,
+      borderRadius: borderRadius,
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: _openStore,
         child: Padding(
