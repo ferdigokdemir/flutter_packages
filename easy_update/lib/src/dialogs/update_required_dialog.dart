@@ -92,27 +92,16 @@ class _UpdateRequiredDialogState extends State<UpdateRequiredDialog> {
     return PopScope(
       canPop: !widget.force,
       child: Dialog(
+        backgroundColor: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // 🎉 Header - Logo/Icon
-              CircleAvatar(
-                radius: 40,
-                backgroundColor: Colors.blue.shade100,
-                child: Icon(
-                  Icons.system_update,
-                  size: 40,
-                  color: Colors.blue.shade700,
-                ),
-              ),
-              const SizedBox(height: 16),
-
               // 📝 Başlık
               Text(
                 widget.force ? l10n.updateRequired : l10n.updateAvailable,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
@@ -125,10 +114,10 @@ class _UpdateRequiredDialogState extends State<UpdateRequiredDialog> {
                 widget.force ? l10n.updateMessage : l10n.optionalUpdateMessage,
                 style: Theme.of(
                   context,
-                ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade700),
+                ).textTheme.bodyMedium?.copyWith(color: Colors.black87),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
 
               // 🔘 Butonlar
               SizedBox(
@@ -158,7 +147,6 @@ class _UpdateRequiredDialogState extends State<UpdateRequiredDialog> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
 
               // Daha sonra butonu - Zorunlu değilse göster
               if (!widget.force)
