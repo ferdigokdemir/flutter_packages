@@ -257,93 +257,93 @@ class EasyUpdateLocalizations {
     },
     'optionalUpdateMessage': {
       'al':
-          'Një version i ri i aplikacionit është i disponueshëm. Rekomandojmë përditësimin për një përvojë më të mirë.',
-      'ar': 'يتوفر إصدار جديد من التطبيق. نوصي بالتحديث للحصول على تجربة أفضل.',
+          'Përditësoni aplikacionin për të marrë veçoritë dhe përmirësimet më të fundit.',
+      'ar': 'حدّث التطبيق للحصول على أحدث الميزات والتحسينات.',
       'bn':
-          'অ্যাপের একটি নতুন সংস্করণ উপলব্ধ। ভালো অভিজ্ঞতার জন্য আপডেট করার পরামর্শ দিচ্ছি।',
+          'সর্বশেষ বৈশিষ্ট্য এবং উন্নতিগুলি পেতে অ্যাপটি আপডেট করুন।',
       'bs':
-          'Nova verzija aplikacije je dostupna. Preporučujemo ažuriranje za bolje iskustvo.',
+          'Ažurirajte aplikaciju da biste dobili najnovije funkcije i poboljšanja.',
       'bg':
-          'Налична е нова версия на приложението. Препоръчваме актуализация за по-добро изживяване.',
+          'Актуализирайте приложението, за да получите най-новите функции и подобрения.',
       'ca':
-          'Hi ha una nova versió de l\'aplicació disponible. Recomanem actualitzar per a una millor experiència.',
-      'zh': '应用有新版本可用。建议更新以获得更好的体验。',
+          'Actualitzeu l\'aplicació per obtenir les últimes funcions i millores.',
+      'zh': '更新应用以获取最新的功能和改进。',
       'hr':
-          'Nova verzija aplikacije je dostupna. Preporučujemo ažuriranje za bolje iskustvo.',
+          'Ažurirajte aplikaciju kako biste dobili najnovije značajke i poboljšanja.',
       'cs':
-          'Je k dispozici nová verze aplikace. Pro lepší zážitek doporučujeme aktualizovat.',
+          'Aktualizujte aplikaci a získejte nejnovější funkce a vylepšení.',
       'da':
-          'En ny version af appen er tilgængelig. Vi anbefaler at opdatere for en bedre oplevelse.',
+          'Opdater appen for at få de nyeste funktioner og forbedringer.',
       'nl':
-          'Er is een nieuwe versie van de app beschikbaar. We raden aan te updaten voor een betere ervaring.',
+          'Werk de app bij om de nieuwste functies en verbeteringen te krijgen.',
       'en':
-          'A new version of the app is available. We recommend updating for a better experience.',
+          'Update the app to get the latest features and improvements.',
       'et':
-          'Rakenduse uus versioon on saadaval. Soovitame parema kogemuse saamiseks värskendada.',
+          'Värskendage rakendust, et saada uusimad funktsioonid ja täiustused.',
       'fi':
-          'Sovelluksesta on saatavilla uusi versio. Suosittelemme päivittämistä paremman kokemuksen saamiseksi.',
+          'Päivitä sovellus saadaksesi uusimmat ominaisuudet ja parannukset.',
       'fa':
-          'نسخه جدید برنامه موجود است. برای تجربه بهتر بروزرسانی را توصیه می‌کنیم.',
+          'برنامه را به‌روزرسانی کنید تا جدیدترین ویژگی‌ها و بهبودها را دریافت کنید.',
       'fr':
-          'Une nouvelle version de l\'application est disponible. Nous recommandons de mettre à jour pour une meilleure expérience.',
+          'Mettez à jour l\'application pour obtenir les dernières fonctionnalités et améliorations.',
       'ka':
-          'აპლიკაციის ახალი ვერსია ხელმისაწვდომია. უკეთესი გამოცდილებისთვის გირჩევთ განაახლოთ.',
+          'განაახლეთ აპლიკაცია უახლესი ფუნქციებისა და გაუმჯობესებების მისაღებად.',
       'de':
-          'Eine neue Version der App ist verfügbar. Wir empfehlen ein Update für ein besseres Erlebnis.',
+          'Aktualisieren Sie die App, um die neuesten Funktionen und Verbesserungen zu erhalten.',
       'el':
-          'Μια νέα έκδοση της εφαρμογής είναι διαθέσιμη. Συνιστούμε την ενημέρωση για καλύτερη εμπειρία.',
-      'he': 'גרסה חדשה של האפליקציה זמינה. אנו ממליצים לעדכן לחוויה טובה יותר.',
+          'Ενημερώστε την εφαρμογή για να αποκτήσετε τις πιο πρόσφατες λειτουργίες και βελτιώσεις.',
+      'he': 'עדכנו את האפליקציה כדי לקבל את התכונות והשיפורים האחרונים.',
       'hu':
-          'Az alkalmazás új verziója elérhető. A jobb élmény érdekében javasoljuk a frissítést.',
+          'Frissítse az alkalmazást a legújabb funkciók és fejlesztések eléréséhez.',
       'hi':
-          'ऐप का नया संस्करण उपलब्ध है। बेहतर अनुभव के लिए अपडेट करने की अनुशंसा करते हैं।',
+          'नवीनतम सुविधाएँ और सुधार पाने के लिए ऐप को अपडेट करें।',
       'id':
-          'Versi baru aplikasi tersedia. Kami sarankan memperbarui untuk pengalaman yang lebih baik.',
+          'Perbarui aplikasi untuk mendapatkan fitur dan peningkatan terbaru.',
       'it':
-          'Una nuova versione dell\'app è disponibile. Ti consigliamo di aggiornare per un\'esperienza migliore.',
-      'ja': 'アプリの新しいバージョンが利用可能です。より良い体験のために更新をお勧めします。',
+          'Aggiorna l\'app per ottenere le ultime funzionalità e i miglioramenti.',
+      'ja': '最新の機能と改善点を入手するには、アプリを更新してください。',
       'ku':
-          'Guhertoya nû ya sepanê heye. Em pêşniyar dikin ku hûn nûve bikin ji bo ezmûnek çêtir.',
-      'ko': '앱의 새 버전을 사용할 수 있습니다. 더 나은 경험을 위해 업데이트를 권장합니다.',
+          'Sepanê nûve bikin da ku taybetmendî û başkirinên herî dawî bistînin.',
+      'ko': '최신 기능과 개선 사항을 받으려면 앱을 업데이트하세요.',
       'km':
-          'កំណែថ្មីនៃកម្មវិធីមាន។ យើងណែនាំអោយអាប់ដេតសម្រាប់បទពិសោធន៍ល្អប្រសើរ។',
-      'lo': 'ມີເວີຊັນໃໝ່ຂອງແອັບ. ພວກເຮົາແນະນຳໃຫ້ອັບເດດເພື່ອປະສົບການທີ່ດີຂຶ້ນ.',
+          'អាប់ដេតកម្មវិធីដើម្បីទទួលបានមុខងារ និងភាពប្រសើរឡើងថ្មីៗ។',
+      'lo': 'ອັບເດດແອັບເພື່ອຮັບຄຸນສົມບັດ ແລະ ການປັບປຸງຫຼ້າສຸດ.',
       'lv':
-          'Ir pieejama jauna lietotnes versija. Iesakām atjaunināt labākai pieredzei.',
+          'Atjauniniet lietotni, lai iegūtu jaunākās funkcijas un uzlabojumus.',
       'ms':
-          'Versi baharu aplikasi tersedia. Kami mengesyorkan kemas kini untuk pengalaman yang lebih baik.',
+          'Kemas kini aplikasi untuk mendapatkan ciri dan penambahbaikan terkini.',
       'mn':
-          'Аппликейшны шинэ хувилбар боломжтой. Илүү сайн туршлагын тулд шинэчлэхийг зөвлөж байна.',
+          'Хамгийн сүүлийн үеийн функц, сайжруулалтыг авахын тулд аппликейшнаа шинэчилнэ үү.',
       'no':
-          'En ny versjon av appen er tilgjengelig. Vi anbefaler å oppdatere for en bedre opplevelse.',
+          'Oppdater appen for å få de nyeste funksjonene og forbedringene.',
       'pl':
-          'Dostępna jest nowa wersja aplikacji. Zalecamy aktualizację dla lepszego doświadczenia.',
+          'Zaktualizuj aplikację, aby uzyskać najnowsze funkcje i ulepszenia.',
       'pt':
-          'Uma nova versão do aplicativo está disponível. Recomendamos atualizar para uma melhor experiência.',
+          'Atualize o aplicativo para obter os recursos e as melhorias mais recentes.',
       'ro':
-          'O nouă versiune a aplicației este disponibilă. Vă recomandăm să actualizați pentru o experiență mai bună.',
+          'Actualizați aplicația pentru a obține cele mai noi funcții și îmbunătățiri.',
       'ru':
-          'Доступна новая версия приложения. Рекомендуем обновить для лучшего опыта.',
+          'Обновите приложение, чтобы получить новейшие функции и улучшения.',
       'sk':
-          'K dispozícii je nová verzia aplikácie. Pre lepší zážitok odporúčame aktualizovať.',
+          'Aktualizujte aplikáciu a získajte najnovšie funkcie a vylepšenia.',
       'sl':
-          'Na voljo je nova različica aplikacije. Za boljšo izkušnjo priporočamo posodobitev.',
+          'Posodobite aplikacijo, da pridobite najnovejše funkcije in izboljšave.',
       'es':
-          'Una nueva versión de la aplicación está disponible. Recomendamos actualizar para una mejor experiencia.',
+          'Actualiza la aplicación para obtener las últimas funciones y mejoras.',
       'sw':
-          'Toleo jipya la programu linapatikana. Tunapendekeza kusasisha kwa uzoefu bora.',
+          'Sasisha programu ili kupata vipengele na maboresho ya hivi karibuni.',
       'se':
-          'En ny version av appen är tillgänglig. Vi rekommenderar att uppdatera för en bättre upplevelse.',
+          'Uppdatera appen för att få de senaste funktionerna och förbättringarna.',
       'ta':
-          'பயன்பாட்டின் புதிய பதிப்பு உள்ளது. சிறந்த அனுபவத்திற்கு புதுப்பிக்க பரிந்துரைக்கிறோம்.',
+          'சமீபத்திய அம்சங்கள் மற்றும் மேம்பாடுகளைப் பெற பயன்பாட்டைப் புதுப்பிக்கவும்.',
       'th':
-          'แอปเวอร์ชันใหม่พร้อมใช้งาน เราแนะนำให้อัปเดตเพื่อประสบการณ์ที่ดีขึ้น',
+          'อัปเดตแอปเพื่อรับฟีเจอร์และการปรับปรุงล่าสุด',
       'tr':
-          'Uygulamanın yeni bir sürümü mevcut. Daha iyi bir deneyim için güncellemenizi öneririz.',
+          'En son özellikleri ve iyileştirmeleri almak için uygulamayı güncelleyin.',
       'uk':
-          'Доступна нова версія додатку. Рекомендуємо оновити для кращого досвіду.',
+          'Оновіть додаток, щоб отримати найновіші функції та покращення.',
       'vi':
-          'Có phiên bản mới của ứng dụng. Chúng tôi khuyên bạn nên cập nhật để có trải nghiệm tốt hơn.',
+          'Cập nhật ứng dụng để nhận các tính năng và cải tiến mới nhất.',
     },
     'updateButton': {
       'al': 'Përditëso',

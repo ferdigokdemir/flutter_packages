@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-06-24
+
+### Changed
+
+- **"Remind Me Later" now snoozes instead of skipping permanently.** Tapping it hides the optional-update dialog for the next `remindInterval` checks (default 3), then shows it again. A newer version resets the counter and shows immediately.
+- Optional-update message reworded to "Update the app to get the latest features and improvements." across all 47 languages.
+
+### Added
+
+- `remindInterval` parameter on `EasyUpdate.init()` / `EasyUpdate.run()` to configure how many checks to snooze the reminder (default 3).
+
 ## [1.3.3] - 2026-06-24
 
 ### Changed

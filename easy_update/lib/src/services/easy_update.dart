@@ -41,14 +41,25 @@ import 'version_check_service.dart';
 class EasyUpdate {
   static final EasyUpdate _instance = EasyUpdate._internal();
 
+  /// SharedPreferences anahtarları
+  static const String _remindCountKey = 'easy_update_remind_count';
+  static const String _remindVersionKey = 'easy_update_remind_version';
+
   late VersionCheckService _service;
   VersionCheckStatus? _lastStatus;
   EasyUpdatePlatformConfig? _currentConfig;
   String _locale = 'en';
 
+  /// "Daha Sonra Hatırlat" ertelemesi: kullanıcı butona bastıktan sonra
+  /// opsiyonel güncelleme dialog'u kaç [check] çağrısı boyunca gizlenir.
+  int _remindInterval = 3;
+
   EasyUpdate._internal();
 
   static EasyUpdate get instance => _instance;
+
+  /// "Daha Sonra Hatırlat" erteleme aralığı (varsayılan 3 kontrol)
+  int get remindInterval => _remindInterval;
 
   /// Mevcut locale
   String get locale => _locale;
@@ -72,7 +83,10 @@ class EasyUpdate {
   Future<void> init({
     EasyUpdatePlatformConfig? android,
     EasyUpdatePlatformConfig? ios,
+    int remindInterval = 3,
   }) async {
+    _remindInterval = remindInterval < 1 ? 1 : remindInterval;
+
     // Platforma göre config seç
     _currentConfig = _getPlatformConfig(android, ios);
 
@@ -111,7 +125,8 @@ class EasyUpdate {
   /// 🔍 Version check yap
   ///
   /// Status'u döndürür ve cache'e kaydeder.
-  /// Eğer kullanıcı "Hatırlatma" skiplediyse, o sürümü check etmez.
+  /// Kullanıcı opsiyonel güncellemede "Daha Sonra Hatırlat" dediyse, dialog
+  /// sonraki [remindInterval] kontrol boyunca gizlenir; ardından tekrar gösterilir.
   Future<VersionCheckStatus> check() async {
     if (_currentConfig == null) {
       debugPrint('⚠️ [EasyUpdate] Not initialized for current platform');
@@ -125,24 +140,37 @@ class EasyUpdate {
     }
 
     try {
-      // SharedPreferences'ten skip edilen versiyonu al
       final prefs = await SharedPreferences.getInstance();
-      final skippedVersion = prefs.getString('easy_update_skipped_version');
 
       _lastStatus = await _service.checkForUpdates();
 
-      // Eğer kullanıcı bu versiyonu skip ettiyse, updateRequired = false yap
-      if (skippedVersion == _lastStatus!.version) {
-        debugPrint(
-          '⏭️ [EasyUpdate] Version $skippedVersion skipped by user, hiding dialog',
-        );
-        _lastStatus = VersionCheckStatus(
-          updateRequired: false,
-          force: false,
-          storeUrl: _lastStatus!.storeUrl,
-          currentVersion: _lastStatus!.currentVersion,
-          version: _lastStatus!.version,
-        );
+      // "Daha Sonra Hatırlat" ertelemesi yalnızca opsiyonel güncellemeler için
+      if (_lastStatus!.updateRequired && !_lastStatus!.force) {
+        final remindVersion = prefs.getString(_remindVersionKey);
+        var remindCount = prefs.getInt(_remindCountKey) ?? 0;
+
+        // Ertelenen sürüm ile mevcut sürüm farklıysa sayacı sıfırla
+        // (yeni bir sürüm çıktıysa hemen gösterilmeli)
+        if (remindVersion != _lastStatus!.version) {
+          remindCount = 0;
+          await prefs.remove(_remindCountKey);
+          await prefs.remove(_remindVersionKey);
+        }
+
+        if (remindCount > 0) {
+          // Erteleme aktif: bu kontrolü atla ve sayacı bir azalt
+          await prefs.setInt(_remindCountKey, remindCount - 1);
+          debugPrint(
+            '⏭️ [EasyUpdate] Reminder snoozed, ${remindCount - 1} check(s) left',
+          );
+          _lastStatus = VersionCheckStatus(
+            updateRequired: false,
+            force: false,
+            storeUrl: _lastStatus!.storeUrl,
+            currentVersion: _lastStatus!.currentVersion,
+            version: _lastStatus!.version,
+          );
+        }
       }
 
       debugPrint('✅ [EasyUpdate] Check completed: $_lastStatus');
@@ -188,8 +216,9 @@ class EasyUpdate {
     BuildContext context, {
     EasyUpdatePlatformConfig? android,
     EasyUpdatePlatformConfig? ios,
+    int remindInterval = 3,
   }) async {
-    await init(android: android, ios: ios);
+    await init(android: android, ios: ios, remindInterval: remindInterval);
     final status = await check();
     if (status.updateRequired && context.mounted) {
       await showUpdateDialog(context);
@@ -259,14 +288,13 @@ class EasyUpdate {
               if (!status.force)
                 TextButton(
                   onPressed: () async {
-                    // Bu sürümü hatırlatma - SharedPreferences'e kaydet
+                    // "Daha Sonra Hatırlat": sonraki [remindInterval] kontrol
+                    // boyunca dialog'u erteler, ardından tekrar gösterilir.
                     final prefs = await SharedPreferences.getInstance();
-                    await prefs.setString(
-                      'easy_update_skipped_version',
-                      status.version,
-                    );
+                    await prefs.setInt(_remindCountKey, _remindInterval);
+                    await prefs.setString(_remindVersionKey, status.version);
                     debugPrint(
-                      '✅ [EasyUpdate] Version ${status.version} marked as skipped',
+                      '⏰ [EasyUpdate] Reminder snoozed for $_remindInterval check(s) (v${status.version})',
                     );
                     if (context.mounted) {
                       Navigator.of(context).pop();
