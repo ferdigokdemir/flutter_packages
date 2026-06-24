@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 
+import '../dialogs/update_required_dialog.dart';
 import '../l10n/easy_update_localizations.dart';
 import '../models/version_check_status.dart';
 import 'version_check_service.dart';
@@ -216,19 +217,39 @@ class EasyUpdate {
     BuildContext context, {
     EasyUpdatePlatformConfig? android,
     EasyUpdatePlatformConfig? ios,
-    int remindInterval = 3,
+    int? remindInterval,
+    bool closeAppOnAndroidUpdate = true,
   }) async {
-    await init(android: android, ios: ios, remindInterval: remindInterval);
+    // Yeni config verildiyse veya henüz init edilmediyse init et;
+    // aksi halde startup'ta yapılan init korunur.
+    if (android != null || ios != null || _currentConfig == null) {
+      await init(
+        android: android,
+        ios: ios,
+        remindInterval: remindInterval ?? _remindInterval,
+      );
+    } else if (remindInterval != null) {
+      _remindInterval = remindInterval < 1 ? 1 : remindInterval;
+    }
+
     final status = await check();
     if (status.updateRequired && context.mounted) {
-      await showUpdateDialog(context);
+      await showUpdateDialog(
+        context,
+        closeAppOnAndroidUpdate: closeAppOnAndroidUpdate,
+      );
     }
   }
 
   ///  Update dialog'unu göster
   ///
   /// Status'a göre zorunlu/opsiyonel update dialog'u gösterir.
-  Future<void> showUpdateDialog(BuildContext context) async {
+  /// "Daha Sonra Hatırlat" ertelemesi ve (Android'de) store'a yönlendirdikten
+  /// sonra uygulamayı kapatma davranışı paket içinde yönetilir.
+  Future<void> showUpdateDialog(
+    BuildContext context, {
+    bool closeAppOnAndroidUpdate = true,
+  }) async {
     final status = _lastStatus ?? await check();
 
     if (!status.updateRequired) {
@@ -240,75 +261,38 @@ class EasyUpdate {
 
     await showDialog(
       context: context,
-      barrierDismissible: status.force ? false : true,
-      builder: (ctx) => _buildUpdateDialog(ctx, status),
+      barrierDismissible: !status.force,
+      builder: (ctx) => UpdateRequiredDialog(
+        force: status.force,
+        storeUrl: status.storeUrl,
+        locale: _locale,
+        // Store'a yönlendirdikten sonra Android'de uygulamayı kapat: eski proses
+        // ölür, Play güncellemeyi temiz kurar ve kullanıcı tekrar açtığında
+        // doğrudan yeni sürüm gelir (elle "force close" gerekmez).
+        onUpdate: () {
+          if (closeAppOnAndroidUpdate && Platform.isAndroid) {
+            SystemNavigator.pop();
+          }
+        },
+        // Opsiyonel güncellemede "Daha Sonra Hatırlat" → ertele.
+        onLater: remindLater,
+      ),
     );
   }
 
-  /// 🏗️ Update dialog widget'ını oluştur
-  Widget _buildUpdateDialog(BuildContext context, VersionCheckStatus status) {
-    final l10n = EasyUpdateLocalizations.of(_locale);
+  /// ⏰ "Daha Sonra Hatırlat" ertelemesini kaydet.
+  ///
+  /// Opsiyonel güncelleme dialog'u sonraki [remindInterval] [check] çağrısı
+  /// boyunca gizlenir, ardından tekrar gösterilir.
+  Future<void> remindLater() async {
+    final version = _lastStatus?.version ?? _currentConfig?.version;
+    if (version == null) return;
 
-    return PopScope(
-      canPop: !status.force,
-      child: AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(
-          status.force ? l10n.updateRequired : l10n.updateAvailable,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
-        ),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.system_update, size: 48, color: Colors.blue),
-              const SizedBox(height: 16),
-              Text(
-                status.force ? l10n.updateMessage : l10n.optionalUpdateMessage,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 16, color: Colors.black87),
-              ),
-              const SizedBox(height: 10),
-
-              ElevatedButton(
-                onPressed: () async {
-                  final url = Uri.parse(status.storeUrl);
-                  if (await canLaunchUrl(url)) {
-                    await launchUrl(url, mode: LaunchMode.externalApplication);
-                  }
-                },
-                child: Text(l10n.updateButton),
-              ),
-
-              if (!status.force)
-                TextButton(
-                  onPressed: () async {
-                    // "Daha Sonra Hatırlat": sonraki [remindInterval] kontrol
-                    // boyunca dialog'u erteler, ardından tekrar gösterilir.
-                    final prefs = await SharedPreferences.getInstance();
-                    await prefs.setInt(_remindCountKey, _remindInterval);
-                    await prefs.setString(_remindVersionKey, status.version);
-                    debugPrint(
-                      '⏰ [EasyUpdate] Reminder snoozed for $_remindInterval check(s) (v${status.version})',
-                    );
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  child: Text(
-                    l10n.laterButton,
-                    style: const TextStyle(color: Colors.black87),
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ),
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_remindCountKey, _remindInterval);
+    await prefs.setString(_remindVersionKey, version);
+    debugPrint(
+      '⏰ [EasyUpdate] Reminder snoozed for $_remindInterval check(s) (v$version)',
     );
   }
 }
